@@ -1,0 +1,29 @@
+{
+	"name": "@produck/lang-abstract-class",
+	"version": "0.0.0",
+	"description": "ECMAScript abstract class generator.",
+	"homepage": "https://github.com/produck/abstract-class#readme",
+	"bugs": {
+		"url": "https://github.com/produck/abstract-class/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/produck/abstract-class.git"
+	},
+	"keywords": [
+		"abstract",
+		"class",
+		"es6"
+	],
+	"license": "MIT",
+	"author": "ChaosLee",
+	"type": "module",
+	"main": "src/index.mjs",
+	"scripts": {
+		"test": "mocha \"**/*.spec.mjs\" -t 999999999"
+	},
+	"dependencies": {
+		"@produck/idiom": "^0.4.1",
+		"@produck/ow": "^0.1.2"
+	}
+}

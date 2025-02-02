@@ -1,21 +1,12 @@
 {
-	"name": "@produck/abstract-class",
-	"version": "0.0.0",
-	"description": "ECMAScript abstract class generator.",
-	"homepage": "https://github.com/produck/abstract-class#readme",
-	"bugs": {
-		"url": "https://github.com/produck/abstract-class/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/produck/abstract-class.git"
-	},
-	"license": "MIT",
-	"author": "",
-	"type": "commonjs",
-	"main": "index.mjs",
+	"name": "@produck/lang-abstract-class-workspace",
+	"private": true,
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"deps:install": "npm -v && npm install",
+		"lint": "eslint --fix packages/**/*.mjs",
+		"test": "npm test --workspaces --if-present",
+		"coverage": "c8 --reporter=lcov npm run test",
+		"publish": "npm run lint && lerna publish"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.19.0",
@@ -28,5 +19,8 @@
 		"mocha": "^11.1.0",
 		"rollup": "^4.32.1",
 		"typescript-eslint": "^8.22.0"
-	}
+	},
+	"workspaces": [
+		"packages/abstract-class"
+	]
 }
