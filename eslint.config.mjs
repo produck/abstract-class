@@ -8,4 +8,9 @@ export default defineConfig([
 	tseslint.configs.recommended,
 	ProduckEslint.config,
 	ProduckEslint.excludeGitIgnore(import.meta.url),
+	{
+		linterOptions: {
+			noInlineConfig: false,
+		},
+	},
 ]);

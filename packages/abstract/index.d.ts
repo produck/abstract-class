@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+
 interface MemberAccessor<V = unknown> {
 	get(): V;
 	set?(value: V): void;
@@ -16,6 +18,7 @@ interface FieldGroup {
 	[Static]?: Field;
 }
 
+type EmptyFieldGroup = { [Instance]: {}; [Static]: {} };
 type ConstructorLike = abstract new (...args: unknown[]) => unknown;
 
 type MergeFieldGroup<LFG extends FieldGroup, RFG extends FieldGroup> = {
@@ -24,7 +27,7 @@ type MergeFieldGroup<LFG extends FieldGroup, RFG extends FieldGroup> = {
 };
 
 type MergeAllFieldGroup<T extends readonly FieldGroup[]> = T extends readonly []
-	? Required<FieldGroup>
+	? EmptyFieldGroup
 	: T extends readonly [infer First extends FieldGroup]
 		? First
 		: T extends readonly [
@@ -32,15 +35,20 @@ type MergeAllFieldGroup<T extends readonly FieldGroup[]> = T extends readonly []
 				...infer Rest extends readonly FieldGroup[]
 			]
 			? MergeFieldGroup<First, MergeAllFieldGroup<Rest>>
-			: Required<FieldGroup>;
+			: EmptyFieldGroup;
 
-type MixinConstructor<C extends ConstructorLike, FG extends FieldGroup> = C & {
-	[key in keyof FG[Static]]: ReturnType<FG[Static][key]['get']>;
+type MixinConstructor<
+	C extends ConstructorLike,
+	FG extends FieldGroup
+> = (abstract new (...args: ConstructorParameters<C>) => {
+	[P in keyof InstanceType<C>]: InstanceType<C>[P];
 } & {
-	new (...args: ConstructorParameters<C>): InstanceType<C> & {
-		[key in keyof FG[Instance]]: ReturnType<FG[Instance][key]['get']>;
-	};
-};
+	[P in keyof FG[Instance]]: ReturnType<FG[Instance][P]['get']>;
+}) & {
+	[P in keyof C]: C[P];
+} & {
+	[P in keyof FG[Static]]: ReturnType<FG[Static][P]['get']>;
+}
 
 interface FieldGroupGenerator<N extends Instance | Static> {
 	<F extends Field>(field: F): { [key in N]: F };
@@ -54,12 +62,16 @@ interface FieldGroupGenerator<N extends Instance | Static> {
 }
 
 type AbstractToken = FieldGroupGenerator<Instance> & {
-	<C extends ConstructorLike, FL extends readonly FieldGroup[]>(
+	<
+		C extends ConstructorLike,
+		FL extends readonly FieldGroup[]
+	>(
 		Constructor: C,
 		...fieldList: FL
 	): MixinConstructor<C, MergeAllFieldGroup<FL>>;
 
 	Static: FieldGroupGenerator<Static>;
+	static: FieldGroupGenerator<Static>;
 };
 
 export const Abstract: AbstractToken;
