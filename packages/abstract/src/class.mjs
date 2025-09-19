@@ -51,14 +51,24 @@ function ProxyHandler(members) {
 	};
 }
 
-function MergeFieldFromList(fieldList) {
-	return {
+function MergeFieldGroupFromList(list) {
+	const final = {
 		[Instance]: {},
 		[Static]: {},
 	};
+
+	for (const {
+		[Instance]: _instance = {},
+		[Static]: _static = {},
+	} of list) {
+		Object.assign(final[Instance], _instance);
+		Object.assign(final[Static], _static);
+	}
+
+	return final;
 }
 
-export function AbstractClass(Constructor, ...fieldList) {
+export function AbstractClass(Constructor, ...fieldGroupList) {
 	if (typeof Constructor !== 'function') {
 		throw new TypeError('Invalid "Constructor", one "function" expected.');
 	}
@@ -66,7 +76,7 @@ export function AbstractClass(Constructor, ...fieldList) {
 	const {
 		[Static]: StaticField = {},
 		[Instance]: InstanceField = {},
-	} = MergeFieldFromList(fieldList);
+	} = MergeFieldGroupFromList(fieldGroupList);
 
 	AssertMemberDescriptorRecord.Instance(InstanceField);
 	AssertMemberDescriptorRecord.Static(StaticField);
@@ -86,3 +96,5 @@ export function AbstractClass(Constructor, ...fieldList) {
 
 	return ConstructorProxy;
 }
+
+export default AbstractClass;

@@ -75,3 +75,4 @@ type AbstractToken = FieldGroupGenerator<Instance> & {
 };
 
 export const Abstract: AbstractToken;
+export default Abstract;

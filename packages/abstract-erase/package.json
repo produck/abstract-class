@@ -1,0 +1,10 @@
+{
+	"name": "@produck/es-abstract-earse",
+	"version": "0.0.0",
+	"description": "Earsing @produck/es-abstract checking.",
+	"license": "MIT",
+	"author": "ChaosLee",
+	"type": "module",
+	"main": "index.mjs",
+	"devDependencies": {}
+}
