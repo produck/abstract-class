@@ -1,45 +1,33 @@
-export const MemberSymbol = Symbol();
+import * as Utils from './utils.mjs';
 
-export function MemberAccessor(get, set) {
-	return Object.freeze({ get, set, [Symbol]: true });
+const MEMBER_VALUE_TRANSFORMER_TAG = Symbol.for('abstract.member.transform');
+
+export function MemberValueTransformer(get, set = get) {
+	return Object.freeze({ get, set, [MEMBER_VALUE_TRANSFORMER_TAG]: true });
 }
 
-export function isMemberAccessor(anyValue) {
+export function isMemberValueTransformer(anyValue) {
 	if (typeof anyValue !== 'object' || anyValue === null) {
 		return false;
 	}
 
-	return Object.hasOwn(anyValue, MemberSymbol);
+	return Object.hasOwn(anyValue, MEMBER_VALUE_TRANSFORMER_TAG);
 }
 
-const ANY_MEMBER = MemberAccessor(v => v, () => {});
-
-const VALID_PROPERTY_TYPE_LIST = ['number', 'string', 'symbol'];
-const VALID_PROPERTY_TYPE_NAME = VALID_PROPERTY_TYPE_LIST.join(' | ');
-
-function assertProperty(value, role) {
-	if (!VALID_PROPERTY_TYPE_LIST.includes(value)) {
-		const message = [
-			`Invalid "${role}", `,
-			`one "${VALID_PROPERTY_TYPE_NAME}" expected.`,
-		].join('');
-
-		throw new TypeError(message);
-	}
-}
+const ANY_MEMBER = MemberValueTransformer(v => v);
 
 function assertMember(member, role) {
-	if (!isMemberAccessor(member)) {
+	if (!isMemberValueTransformer(member)) {
 		throw new TypeError(`Invalid "${role}", one "MemberAccessor" expected.`);
 	}
 }
 
-export function AbstractFieldGroupFactory(identity) {
+export function AbstractFieldGroupFactory(symbol) {
 	function AbstractFieldGroupByNamedMember(property, member = ANY_MEMBER) {
-		assertProperty(property, 'arg[0]');
+		Utils.assertProperty(property, 'arg[0]');
 		assertMember(member, 'arg[1]');
 
-		return Object.freeze({ [identity]: Object.freeze({ [property]: member }) });
+		return Object.freeze({ [symbol]: Object.freeze({ [property]: member }) });
 	}
 
 	function AbstractFieldGroupByMemberRecord(memberRecord) {
@@ -55,7 +43,7 @@ export function AbstractFieldGroupFactory(identity) {
 			record[property] = member;
 		}
 
-		return Object.freeze({ [identity]: Object.freeze(record) });
+		return Object.freeze({ [symbol]: Object.freeze(record) });
 	}
 
 	function AbstractFieldGroup(...operands) {

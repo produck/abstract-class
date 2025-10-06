@@ -8,4 +8,4 @@ Object.assign(passthrough, {
 Object.freeze(passthrough);
 
 export default passthrough;
-export { passthrough as MemberAccessor };
+export { passthrough as MemberValueTransformer };

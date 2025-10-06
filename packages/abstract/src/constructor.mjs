@@ -1,7 +1,8 @@
-import * as Member from './member.mjs';
+import * as Field from './field.mjs';
+import * as Utils from './utils.mjs';
 
-export const Static = Symbol('abstract static member');
-export const Instance = Symbol('abstract instance member');
+export const Instance = Symbol.for('abstract.member.field.instance');
+export const Static = Symbol.for('abstract.member.field.static');
 
 function MemberDescriptorRecordAssertor(namespace) {
 	const NAME = `${namespace}DescriptorRecord`;
@@ -12,11 +13,15 @@ function MemberDescriptorRecordAssertor(namespace) {
 		}
 
 		for (const property in value) {
-			const descriptor = value[property];
+			const transformer = value[property];
 
-			if (!Member.isDescriptor(descriptor)) {
-				const LOCATOR = `${NAME}["${String(property)}"]`;
-				throw new TypeError(`Invalid "${LOCATOR}", one "member descriptor" expected.`);
+			if (!Field.isMemberValueTransformer(transformer)) {
+				const messageSpanList = [
+					`Invalid "${NAME}["${String(property)}"]". `,
+					'one "member value transformer" expected.',
+				];
+
+				throw new TypeError(messageSpanList.join(''));
 			}
 		}
 	};
@@ -51,16 +56,10 @@ function ProxyHandler(members) {
 	};
 }
 
-function MergeFieldGroupFromList(list) {
-	const final = {
-		[Instance]: {},
-		[Static]: {},
-	};
+function MergeFieldGroup(list) {
+	const final = { [Instance]: {}, [Static]: {} };
 
-	for (const {
-		[Instance]: _instance = {},
-		[Static]: _static = {},
-	} of list) {
+	for (const { [Instance]: _instance = {}, [Static]: _static = {} } of list) {
 		Object.assign(final[Instance], _instance);
 		Object.assign(final[Static], _static);
 	}
@@ -68,18 +67,20 @@ function MergeFieldGroupFromList(list) {
 	return final;
 }
 
-export function AbstractClass(Constructor, ...fieldGroupList) {
-	if (typeof Constructor !== 'function') {
-		throw new TypeError('Invalid "Constructor", one "function" expected.');
+export function AbstractConstructor(Constructor, ...fieldGroupList) {
+	if (!Utils.isConstructor(Constructor)) {
+		throw new TypeError('Invalid "args[0]", one "constructible" expected.');
+	}
+
+	for (const [index, fieldGroup] of Object.entries(fieldGroupList)) {
+		AssertMemberDescriptorRecord.Instance(InstanceField);
+		AssertMemberDescriptorRecord.Static(StaticField);
 	}
 
 	const {
-		[Static]: StaticField = {},
-		[Instance]: InstanceField = {},
-	} = MergeFieldGroupFromList(fieldGroupList);
-
-	AssertMemberDescriptorRecord.Instance(InstanceField);
-	AssertMemberDescriptorRecord.Static(StaticField);
+		[Static]: StaticField,
+		[Instance]: InstanceField,
+	} = MergeFieldGroup(fieldGroupList);
 
 	const INSTANCE_PROXY_HANDLER = ProxyHandler(InstanceField);
 
@@ -96,5 +97,3 @@ export function AbstractClass(Constructor, ...fieldGroupList) {
 
 	return ConstructorProxy;
 }
-
-export default AbstractClass;

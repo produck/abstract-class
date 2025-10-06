@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-interface MemberAccessor<V = unknown> {
+interface MemberValueTransformer<V = unknown> {
 	get(): V;
 	set?(value: V): void;
 }
 
-type Field = Record<string | number | symbol, MemberAccessor>;
+type Field = Record<string | number | symbol, MemberValueTransformer>;
 
 declare const Instance: unique symbol;
 declare const Static: unique symbol;
@@ -53,7 +53,7 @@ type MixinConstructor<
 interface FieldGroupGenerator<N extends Instance | Static> {
 	<F extends Field>(field: F): { [key in N]: F };
 
-	<P extends number | symbol | string, M extends MemberAccessor>(
+	<P extends number | symbol | string, M extends MemberValueTransformer>(
 		property: P,
 		accessor?: M
 	): {

@@ -1,20 +1,18 @@
-import { AbstractClass, Instance, Static } from './class.mjs';
-import { AbstractFieldGroupFactory, MemberAccessor } from './field.mjs';
+import { AbstractConstructor, Instance, Static } from './constructor.mjs';
+import { AbstractFieldGroupFactory, MemberValueTransformer } from './field.mjs';
 
 const AbstractInstanceFieldGroup = AbstractFieldGroupFactory(Instance);
 const AbstractStaticFieldGroup = AbstractFieldGroupFactory(Static);
 
 function AbstractToken(...operands) {
-	if (operands.length === 0) {
-		throw new Error('At least 1 operand is required.');
-	}
+	const { length } = operands;
 
-	if (operands.length > 2) {
-		throw new Error('The number of operand MUST NOT exceed 2.');
+	if (length < 1) {
+		throw new SyntaxError('At least 1 operand is required.');
 	}
 
 	if (typeof operands[0] === 'function') {
-		return AbstractClass(...operands);
+		return AbstractConstructor(...operands);
 	}
 
 	return AbstractInstanceFieldGroup(...operands);
@@ -27,5 +25,7 @@ Object.assign(AbstractToken, {
 
 Object.freeze(AbstractToken);
 
-export { AbstractToken as default };
-export { MemberAccessor };
+export {
+	AbstractToken as default,
+	MemberValueTransformer,
+};
