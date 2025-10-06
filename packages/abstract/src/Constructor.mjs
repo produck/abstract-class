@@ -1,4 +1,4 @@
-import * as Field from './field.mjs';
+import * as Field from './Field.mjs';
 import * as Utils from './utils.mjs';
 
 export const Instance = Symbol.for('abstract.member.field.instance');

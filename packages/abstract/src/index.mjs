@@ -1,5 +1,5 @@
-import { AbstractConstructor, Instance, Static } from './constructor.mjs';
-import { AbstractFieldGroupFactory, MemberValueTransformer } from './field.mjs';
+import { AbstractConstructor, Instance, Static } from './Constructor.mjs';
+import { AbstractFieldGroupFactory, MemberValueTransformer } from './Field.mjs';
 
 const AbstractInstanceFieldGroup = AbstractFieldGroupFactory(Instance);
 const AbstractStaticFieldGroup = AbstractFieldGroupFactory(Static);

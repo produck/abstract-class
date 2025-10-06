@@ -2,7 +2,7 @@ import * as assert from 'node:assert';
 import { describe, it } from 'node:test';
 
 import Abstract from '../src/index.mjs';
-import { Instance, Static } from '../src/constructor.mjs';
+import { Instance, Static } from '../src/Constructor.mjs';
 
 const MEMBER_VALUE_TRANSFORMER_TAG = Symbol.for('abstract.member.transform');
 
