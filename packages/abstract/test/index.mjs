@@ -1,10 +1,77 @@
-import * as assert from 'node:assert';
+import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract from '../src/index.mjs';
-import { Instance, Static } from '../src/Constructor.mjs';
+import Abstract, { Member } from '../src/index.mjs';
 
-const MEMBER_VALUE_TRANSFORMER_TAG = Symbol.for('abstract.member.transform');
+const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
+
+const GOOD_PROPERTY_LIST = [
+	'foo', 0, Symbol(),
+];
+
+const BAD_PROPERTY_LIST = [
+	true, null, undefined, BigInt(1),
+	[], {}, new Date(), () => {},
+];
+
+const BAD_MEMBER_LIST = [
+	true, null, BigInt(1),
+	[], {}, new Date(), () => {},
+];
+
+describe('::Member', () => {
+	describe('::Member()~define()', () => {
+		it('should throw if bad get.', () => {
+			assert.throws(() => Member.Member(), {
+				name: 'TypeError',
+				message: 'Invalid "arg[0] as get", one "function" expected.',
+			});
+		});
+
+		it('should throw if bad get.', () => {
+			assert.throws(() => Member.Member(null), {
+				name: 'TypeError',
+				message: 'Invalid "arg[0] as get", one "function" expected.',
+			});
+		});
+
+		it('should create a member', () => {
+			assert.ok(typeof Member.Member(_ => _) === 'object');
+		});
+	});
+
+	describe('.isMember()', () => {
+		it('should be false.', () => {
+			for (const badMember of BAD_MEMBER_LIST) {
+				assert.equal(Member.isMember(badMember), false);
+			}
+		});
+
+		it('should be true.', () => {
+			assert.equal(Member.isMember(Member.Any), true);
+		});
+	});
+
+	describe('.isProperty()', () => {
+		it('should be false.', () => {
+			for (const badProperty of BAD_PROPERTY_LIST) {
+				assert.equal(Member.isProperty(badProperty), false);
+			}
+		});
+
+		it('should be true.', () => {
+			for (const goodProperty of GOOD_PROPERTY_LIST) {
+				assert.equal(Member.isProperty(goodProperty), true);
+			}
+		});
+	});
+
+	describe('.Any', () => {
+		it('should be a member as any type existed.', () => {
+			assert.ok('Any' in Member);
+		});
+	});
+});
 
 describe('AbstractToken', () => {
 	class Mock {};
@@ -15,6 +82,153 @@ describe('AbstractToken', () => {
 				name: 'SyntaxError',
 				message: 'At least 1 operand is required.',
 			});
+		});
+	});
+
+	describe('~AbstractInstanceFieldGroup()', () => {
+		// InstanceFieldGroup
+
+		it('should throw if operands number >2.', () => {
+			assert.throws(() => Abstract(0, 0, 0), {
+				name: 'SyntaxError',
+				message: 'The number of operands cannot exceed 2.',
+			});
+		});
+
+		describe('(memberRecord)', () => {
+			it('should throw if bad member record.', () => {
+				for (const badMember of BAD_MEMBER_LIST) {
+					assert.throws(() => Abstract({
+						foo: badMember,
+					}), {
+						name: 'TypeError',
+						message: 'Invalid "arg[0][\'foo\']", one "Member" expected.',
+					});
+				}
+
+				for (const badMember of BAD_MEMBER_LIST) {
+					assert.throws(() => Abstract({
+						[Symbol('bar')]: badMember,
+					}), {
+						name: 'TypeError',
+						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "Member" expected.',
+					});
+				}
+			});
+
+			it('should return a FieldGroup.', () => {
+				const group = Abstract({ foo: Member.Any });
+
+				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+			});
+		});
+
+		describe('(property, member)', () => {
+			it('should throw if bad property.', () => {
+				for (const badProperty of BAD_PROPERTY_LIST) {
+					if (typeof badProperty === 'function') {
+						continue;
+					}
+
+					assert.throws(() => Abstract(badProperty, Member.Any), {
+						name: 'TypeError',
+						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
+					});
+				}
+			});
+
+			it('should throw if bad member.', () => {
+				for (const badMember of BAD_MEMBER_LIST) {
+					assert.throws(() => Abstract('foo', badMember), {
+						name: 'TypeError',
+						message: 'Invalid "arg[1]", one "Member" expected.',
+					});
+				}
+			});
+
+			it('should return a FieldGroup.', () => {
+				const group = Abstract('foo', Member.Any);
+
+				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+			});
+		});
+	});
+
+	describe('.Static()~AbstractStaticFieldGroup()', () => {
+		// StaticFieldGroup
+
+		it('should throw if no operand.', () => {
+			assert.throws(() => Abstract.Static(), {
+				name: 'SyntaxError',
+				message: 'At least 1 operand is required.',
+			});
+		});
+
+		it('should throw if operands number >2.', () => {
+			assert.throws(() => Abstract.Static(0, 0, 0), {
+				name: 'SyntaxError',
+				message: 'The number of operands cannot exceed 2.',
+			});
+		});
+
+		describe('(memberRecord)', () => {
+			it('should throw if bad member record.', () => {
+				for (const badMember of BAD_MEMBER_LIST) {
+					assert.throws(() => Abstract.Static({
+						foo: badMember,
+					}), {
+						name: 'TypeError',
+						message: 'Invalid "arg[0][\'foo\']", one "Member" expected.',
+					});
+				}
+
+				for (const badMember of BAD_MEMBER_LIST) {
+					assert.throws(() => Abstract.Static({
+						[Symbol('bar')]: badMember,
+					}), {
+						name: 'TypeError',
+						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "Member" expected.',
+					});
+				}
+			});
+
+			it('should return a FieldGroup.', () => {
+				const group = Abstract.Static({ foo: Member.Any });
+
+				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+			});
+		});
+
+		describe('(property, member)', () => {
+			it('should throw if bad property.', () => {
+				for (const badProperty of BAD_PROPERTY_LIST) {
+					assert.throws(() => Abstract.Static(badProperty, Member.Any), {
+						name: 'TypeError',
+						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
+					});
+				}
+			});
+
+			it('should throw if bad member.', () => {
+				for (const badMember of BAD_MEMBER_LIST) {
+					assert.throws(() => Abstract.Static('foo', badMember), {
+						name: 'TypeError',
+						message: 'Invalid "arg[1]", one "Member" expected.',
+					});
+				}
+			});
+
+			it('should return a FieldGroup.', () => {
+				const group = Abstract.Static('foo', Member.Any);
+
+				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+			});
+		});
+	});
+
+	describe('.static', () => {
+		it('should be same to ".Static".', () => {
+			assert.equal(Abstract.Static, Abstract.static);
 		});
 	});
 
@@ -32,7 +246,7 @@ describe('AbstractToken', () => {
 			]) {
 				assert.throws(() => Abstract(Mock, badValue), {
 					name: 'TypeError',
-					message: '',
+					message: 'Invalid "args[1]", one "FieldGroup" expcected.',
 				});
 			}
 		});
@@ -42,15 +256,11 @@ describe('AbstractToken', () => {
 		});
 
 		it('should define an abstract class with field groups.', () => {
-			Abstract(Mock, {
-				[Instance]: {
-					foo: {
-						get: _ => _,
-						set: _ => _,
-						[MEMBER_VALUE_TRANSFORMER_TAG]: true,
-					},
-				},
-			});
+			Abstract(Mock, ...[
+				Abstract({
+					foo: Member.Any,
+				}),
+			]);
 		});
 
 		describe('>ConstructorProxy', () => {
@@ -72,21 +282,10 @@ describe('AbstractToken', () => {
 
 				new SubMock();
 			});
+
+			describe('::<AbstractMember>', () => {
+
+			});
 		});
 	});
-
-	describe('~AbstractInstanceFieldGroup()', () => {
-
-	});
-
-	function AbstractStaticFieldGroupDescribe() {
-
-	}
-
-	describe('.Static()', AbstractStaticFieldGroupDescribe);
-	describe('.static()', AbstractStaticFieldGroupDescribe);
-});
-
-describe('MemberValueTransformer()', () => {
-
 });

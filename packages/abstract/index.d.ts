@@ -2,7 +2,6 @@
 
 interface MemberValueTransformer<V = unknown> {
 	get(): V;
-	set?(value: V): void;
 }
 
 type Field = Record<string | number | symbol, MemberValueTransformer>;
@@ -61,6 +60,8 @@ interface FieldGroupGenerator<N extends Instance | Static> {
 	};
 }
 
+type StaticFieldGroupGenerator = FieldGroupGenerator<Static>;
+
 type AbstractToken = FieldGroupGenerator<Instance> & {
 	<
 		C extends ConstructorLike,
@@ -70,8 +71,8 @@ type AbstractToken = FieldGroupGenerator<Instance> & {
 		...fieldList: FL
 	): MixinConstructor<C, MergeAllFieldGroup<FL>>;
 
-	Static: FieldGroupGenerator<Static>;
-	static: FieldGroupGenerator<Static>;
+	Static: StaticFieldGroupGenerator;
+	static: StaticFieldGroupGenerator;
 };
 
 export const Abstract: AbstractToken;

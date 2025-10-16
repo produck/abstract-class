@@ -1,10 +1,7 @@
-import { AbstractConstructor, Instance, Static } from './Constructor.mjs';
-import { AbstractFieldGroupFactory, MemberValueTransformer } from './Field.mjs';
+import { AbstractConstructor } from './Constructor.mjs';
+import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
-const AbstractInstanceFieldGroup = AbstractFieldGroupFactory(Instance);
-const AbstractStaticFieldGroup = AbstractFieldGroupFactory(Static);
-
-function AbstractToken(...operands) {
+const Token = Object.assign(function AbstractToken(...operands) {
 	const { length } = operands;
 
 	if (length < 1) {
@@ -15,17 +12,11 @@ function AbstractToken(...operands) {
 		return AbstractConstructor(...operands);
 	}
 
-	return AbstractInstanceFieldGroup(...operands);
-}
+	return NamedFieldGroup.Instance(...operands);
+}, { Static: NamedFieldGroup.Static });
 
-Object.assign(AbstractToken, {
-	Static: AbstractStaticFieldGroup,
-	static: AbstractStaticFieldGroup,
-});
+Object.defineProperty(Token, 'static', { get: () => Token.Static });
+Object.freeze(Token);
 
-Object.freeze(AbstractToken);
-
-export {
-	AbstractToken as default,
-	MemberValueTransformer,
-};
+export default Token;
+export * as Member from './Member.mjs';
