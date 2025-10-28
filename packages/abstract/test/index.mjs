@@ -280,12 +280,113 @@ describe('AbstractToken', () => {
 
 				class SubMock extends AbstractMock {};
 
-				new SubMock();
+				const mock = new SubMock();
+
+				assert.ok(mock instanceof SubMock);
+				assert.ok(mock instanceof AbstractMock);
+				assert.ok(mock instanceof Mock);
 			});
 
-			describe('::<AbstractMember>', () => {
+			describe('<AbstractMember>', () => {
+				const AbstractMock = Abstract(class extends WeakMap {
+					foo() {
+						return 'AbstractMockFoo';
+					}
 
+					getName() {
+						return `is${this.name}`;
+					}
+
+					static Baz() {
+						return 'AbstractMockStaticBaz';
+					}
+				}, ...[
+					Abstract.Static({
+						Foo: Member.Any,
+						Bar: Member.Any,
+					}),
+					Abstract({
+						name: Member.Any,
+						bar: Member.Any,
+					}),
+				]);
+
+				const AbstractSubMock = Abstract(class extends AbstractMock {
+
+					static Foo() {
+						return 'AbstractSubMockStaticFoo';
+					}
+				}, ...[
+
+				]);
+
+				class LooseSubMock extends AbstractSubMock {
+
+				}
+
+				class FullSubMock extends AbstractSubMock {
+					name = 'full';
+
+					bar() {
+						return 'FullSubMockBar';
+					}
+
+					static Foo() {
+						return 'FullSubMockStaticFoo';
+					}
+
+					static Bar() {
+						return 'FullSubMockStaticBar';
+					}
+				}
+
+				describe('<Instance>', () => {
+					it('should throw if not implemented.', () => {
+						const loose = new LooseSubMock();
+
+						assert.throws(() => loose.bar, {
+							name: 'Error',
+							message: 'Instance member "bar" is NOT implemented.',
+						});
+					});
+
+					it('should call FullSubMock.bar()', () => {
+						const full = new FullSubMock();
+
+						assert.equal(full.bar(), 'FullSubMockBar');
+					});
+
+					it('should throw if no `.name`.', () => {
+						const loose = new LooseSubMock();
+
+						assert.throws(() => loose.getName(), {
+							name: 'Error',
+							message: 'Instance member "name" is NOT implemented.',
+						});
+					});
+
+					it('should call .getName() by instance `.name` implementing.', () => {
+						const loose = new LooseSubMock();
+
+						loose.name = 'qux';
+						assert.equal(loose.getName(), 'isqux');
+					});
+				});
+
+				describe('<Static>', () => {
+					it('should throw if not implemented.', () => {
+						assert.throws(() => LooseSubMock.Bar, {
+							name: 'Error',
+							message: 'Static member "Bar" is NOT implemented.',
+						});
+					});
+
+					it('should call AbstractSubMock.Foo()', () => {
+						assert.equal(AbstractSubMock.Foo(), 'AbstractSubMockStaticFoo');
+					});
+				});
 			});
+
 		});
 	});
 });

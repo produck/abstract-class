@@ -14,7 +14,7 @@ function isConstructor(value) {
 
 const RESERVED_PROPERTY_LIST = ['prototype', 'constructor'];
 
-function ProxyHandler(members) {
+function ProxyHandler(members, fieldName) {
 	return {
 		get(target, property, receiver) {
 			if (RESERVED_PROPERTY_LIST.includes(property)) {
@@ -26,12 +26,10 @@ function ProxyHandler(members) {
 			}
 
 			if (property in target) {
-				const finalValue = members[property].get(target[property]);
-
-				return Reflect.get(finalValue, property, receiver) ;
+				return members[property].get(Reflect.get(target, property, receiver));
 			}
 
-			throw new Error(`Property "${property}" is NOT implemented.`);
+			throw new Error(`${fieldName} member "${property}" is NOT implemented.`);
 		},
 	};
 }
@@ -49,21 +47,19 @@ export function AbstractConstructor(Constructor, ...fieldGroupList) {
 		}
 	}
 
-	const {
-		[FieldGroup.Static]: StaticField,
-		[FieldGroup.Instance]: InstanceField,
-	} = NamedFieldGroup.merge(fieldGroupList);
-
-	const INSTANCE_PROXY_HANDLER = ProxyHandler(InstanceField);
+	const Field = NamedFieldGroup.merge(fieldGroupList);
+	const INSTANCE_PROXY_HANDLER = ProxyHandler(Field.Instance, 'Instance');
 
 	const ConstructorProxy = new Proxy(Constructor, {
-		...ProxyHandler(StaticField),
+		...ProxyHandler(Field.Static, 'Static'),
 		construct(target, argumentList, newTarget) {
 			if (newTarget === ConstructorProxy) {
 				throw new Error('Illegal construction on an abstract constructor.');
 			}
 
-			return new Proxy(new target(...argumentList), INSTANCE_PROXY_HANDLER);
+			const instance = Reflect.construct(target, argumentList, newTarget);
+
+			return new Proxy(instance, INSTANCE_PROXY_HANDLER);
 		},
 	});
 
