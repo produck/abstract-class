@@ -78,3 +78,15 @@ type AbstractToken = FieldGroupGenerator<Instance> & {
 declare const Abstract: AbstractToken;
 
 export default Abstract;
+
+export namespace Member {
+	export function Member<T>(
+		transform: (value: T) => T
+	): MemberValueTransformer<T>;
+
+	export function isMember(value: unknown): boolean;
+	export function isProperty(value: unknown): boolean;
+	export const PROPERTY_TYPE_LIST: ['number', 'string', 'symbol'];
+	export { Member as define };
+	export const Any: MemberValueTransformer;
+}
