@@ -1,11 +1,8 @@
 const passthrough = any => any;
 
-Object.assign(passthrough, {
+export default Object.freeze(Object.assign(passthrough, {
 	Static: passthrough,
 	static: passthrough,
-});
+}));
 
-Object.freeze(passthrough);
-
-export default passthrough;
-export { passthrough as MemberValueTransformer };
+export const Member = Object.freeze({ Any: {} });
