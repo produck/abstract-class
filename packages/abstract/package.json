@@ -1,6 +1,6 @@
 {
 	"name": "@produck/es-abstract",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Keyword \"abstract\" in ECMAScript",
 	"keywords": [
 		"es",
