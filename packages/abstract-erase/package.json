@@ -9,6 +9,5 @@
 	"scripts": {
 		"test": "node ./test/index.mjs",
 		"test:only": "node --test-only ./test/index.mjs"
-	},
-	"devDependencies": {}
+	}
 }

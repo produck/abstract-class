@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
 interface MemberValueTransformer<V = unknown> {
-	get(): V;
+	get(...args: unknown[]): V;
 }
 
 type Field = Record<string | number | symbol, MemberValueTransformer>;
@@ -75,5 +75,6 @@ type AbstractToken = FieldGroupGenerator<Instance> & {
 	static: StaticFieldGroupGenerator;
 };
 
-export const Abstract: AbstractToken;
+declare const Abstract: AbstractToken;
+
 export default Abstract;
