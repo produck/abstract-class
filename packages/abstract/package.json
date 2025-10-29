@@ -11,6 +11,9 @@
 	],
 	"license": "MIT",
 	"author": "ChaosLee",
+	"publishConfig": {
+		"access": "public"
+	},
 	"type": "module",
 	"main": "src/index.mjs",
 	"types": "index.d.ts",

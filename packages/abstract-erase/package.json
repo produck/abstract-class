@@ -2,10 +2,16 @@
 	"name": "@produck/es-abstract-earse",
 	"version": "0.0.0",
 	"description": "Earsing @produck/es-abstract checking.",
+	"publishConfig": {
+		"access": "public"
+	},
 	"license": "MIT",
 	"author": "ChaosLee",
 	"type": "module",
 	"main": "index.mjs",
+	"exports": {
+		"import": "./src/index.mjs"
+	},
 	"scripts": {
 		"test": "node ./test/index.mjs",
 		"test:only": "node --test-only ./test/index.mjs"
