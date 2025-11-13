@@ -1,11 +1,11 @@
-const MEMBER_VALUE_TRANSFORMER_TAG = Symbol.for('abstract.member.transform');
+const MEMBER_VALUE_PARSER_TAG = Symbol.for('abstract.member.transform');
 
 export function Member(get) {
 	if (typeof get !== 'function') {
 		throw new TypeError('Invalid "arg[0] as get", one "function" expected.');
 	}
 
-	return Object.freeze({ get, [MEMBER_VALUE_TRANSFORMER_TAG]: true });
+	return Object.freeze({ get, [MEMBER_VALUE_PARSER_TAG]: true });
 }
 
 export function isMember(anyValue) {
@@ -13,7 +13,7 @@ export function isMember(anyValue) {
 		return false;
 	}
 
-	return Object.hasOwn(anyValue, MEMBER_VALUE_TRANSFORMER_TAG);
+	return Object.hasOwn(anyValue, MEMBER_VALUE_PARSER_TAG);
 }
 
 export const PROPERTY_TYPE_LIST = ['number', 'string', 'symbol'];

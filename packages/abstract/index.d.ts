@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
+type Parser<V = unknown> = (...args: unknown[]) => V;
+
 interface MemberValueTransformer<V = unknown> {
-	get(...args: unknown[]): V;
+	get: Parser<V>;
 }
 
 type Field = Record<string | number | symbol, MemberValueTransformer>;
@@ -90,3 +92,7 @@ export namespace Member {
 	export { Member as define };
 	export const Any: MemberValueTransformer;
 }
+
+export const any: MemberValueTransformer;
+
+export const fn: () => MemberValueTransformer<() => unknown>;
