@@ -1,16 +1,41 @@
 import * as Member from './Member.mjs';
 
 const operators = {
-	args: (...parsers) => parsers,
-	rest: parser => parser,
-	returns: parser => parser,
+	args: (...parsers) => {
+		for (const [index, parser] of parsers.entries()) {
+			if (typeof parser !== 'function') {
+				throw new TypeError(
+					`Invalid "args[${index}]", one "function" expected.`,
+				);
+			}
+		}
+
+		return parsers;
+	},
+	rest: (parser) => {
+		if (typeof parser !== 'function') {
+			throw new TypeError('Invalid "args[0]", one "function" expected.');
+		}
+
+		return parser;
+	},
+	returns: (parser) => {
+		if (typeof parser !== 'function') {
+			throw new TypeError('Invalid "args[0]", one "function" expected.');
+		}
+
+		return parser;
+	},
 };
+
+const RESERVED = ['get'];
+const OPERATORS_DESCRIPTION = Object.keys(operators).join(', ');
 
 export const defineFunctionMember = () => {
 	const schemas = {
 		args: [],
-		rest: value => value,
-		returns: value => value,
+		rest: (value) => value,
+		returns: (value) => value,
 	};
 
 	const called = {
@@ -19,41 +44,54 @@ export const defineFunctionMember = () => {
 		returns: false,
 	};
 
-	return new Proxy(Member.define(function parser(fn) {
-		if (typeof fn !== 'function') {
+	let used = false;
+
+	const member = Member.define(function parser(functionMember) {
+		if (typeof functionMember !== 'function') {
 			throw new TypeError('Invalid member, one "function" expected.');
 		}
 
-		return function (...args) {
+		return function parsedFunctionMember(...args) {
+			used = true;
+
 			const finalArgs = [];
 
 			for (const [index, value] of args.entries()) {
-				if (index < schemas.length) {
+				if (index < schemas.args.length) {
 					finalArgs[index] = schemas.args[index](value);
 				} else {
 					finalArgs[index] = schemas.rest(value);
 				}
 			}
 
-			return schemas.returns(fn(...finalArgs));
+			return schemas.returns(functionMember.apply(this, finalArgs));
 		};
-	}), {
+	});
+
+	return new Proxy(member, {
 		get(target, property, reciever) {
+			if (RESERVED.includes(property)) {
+				return Reflect.get(target, property, reciever);
+			}
+
 			if (!Object.hasOwn(operators, property)) {
-				throw new Error(`Only "${operators.join(', ')}" is available.`);
+				throw new Error(`Only "${OPERATORS_DESCRIPTION}" is available.`);
 			}
 
 			if (called[property]) {
-				throw new Error(`.${property}() can only be called once.`);
+				throw new Error(`Operator .${property}() can only be called once.`);
+			}
+
+			if (used) {
+				throw new Error('This member is used then can not be modified.');
 			}
 
 			return function operate(...args) {
 				schemas[property] = operators[property](...args);
 				called[property] = true;
 
-				return Reflect.get(target, property, reciever);
+				return reciever;
 			};
 		},
 	});
-
 };

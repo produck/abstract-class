@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { Member } from '../src/index.mjs';
+import Abstract, { Member, fn } from '../src/index.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
@@ -387,6 +387,173 @@ describe('AbstractToken', () => {
 				});
 			});
 
+		});
+	});
+});
+
+describe('::fn()', () => {
+	it('should create a fn member.', () => {
+		assert.ok(Member.isMember(fn()));
+	});
+
+	describe('.<operate>', function () {
+		it('should throw if bad operate.', () => {
+			assert.throws(() => fn().bad, {
+				name: 'Error',
+				message: 'Only "args, rest, returns" is available.',
+			});
+		});
+
+		it('should be able to access `.get`', () => {
+			assert.ok(typeof fn().get === 'function');
+		});
+
+		describe('args()', () => {
+			it('should throw if any bad parser.', () => {
+				assert.throws(() => fn().args(v => v, null), {
+					name: 'TypeError',
+					message: 'Invalid "args[1]", one "function" expected.',
+				});
+			});
+
+			it('should get the member itself.', () => {
+				assert.ok(Member.isMember(fn().args(v => v)));
+			});
+
+			it('should throw if called exceed once.', () => {
+				assert.throws(() => fn().args(v => v).args(v => v), {
+					name: 'Error',
+					message: 'Operator .args() can only be called once.',
+				});
+			});
+		});
+
+		describe('rest()', () => {
+			it('should throw if bad parser.', () => {
+				assert.throws(() => fn().rest(null), {
+					name: 'TypeError',
+					message: 'Invalid "args[0]", one "function" expected.',
+				});
+			});
+
+			it('should get the member itself.', () => {
+				assert.ok(Member.isMember(fn().rest(v => v)));
+			});
+
+			it('should throw if called exceed once.', () => {
+				assert.throws(() => fn().rest(v => v).rest(v => v), {
+					name: 'Error',
+					message: 'Operator .rest() can only be called once.',
+				});
+			});
+		});
+
+		describe('returns()', () => {
+			it('should throw if bad parser.', () => {
+				assert.throws(() => fn().returns(null), {
+					name: 'TypeError',
+					message: 'Invalid "args[0]", one "function" expected.',
+				});
+			});
+
+			it('should get the member itself.', () => {
+				assert.ok(Member.isMember(fn().returns(v => v)));
+			});
+
+			it('should throw if called exceed once.', () => {
+				assert.throws(() => fn().returns(v => v).returns(v => v), {
+					name: 'Error',
+					message: 'Operator .returns() can only be called once.',
+				});
+			});
+		});
+
+		describe('~AbstractMember', () => {
+			const AbstractMock = Abstract(class Mock {}, ...[
+				Abstract({
+					foo: fn(),
+				}),
+			]);
+
+			it('should throw if bad implementation.', () => {
+				class BadSubMock extends AbstractMock {
+					foo = null;
+				}
+
+				const mock = new BadSubMock();
+
+				assert.throws(() => mock.foo, {
+					name: 'TypeError',
+					message: 'Invalid member, one "function" expected.',
+				});
+			});
+
+			it('should be checked by default schemas.', () => {
+				class SubMock extends AbstractMock {
+					foo() {};
+				}
+
+				const mock = new SubMock();
+
+				mock.foo(null);
+			});
+
+			it('should be checked by schemas.', () => {
+				const checked = {
+					args: [false, false],
+					rest: false,
+					returns: false,
+				};
+
+				const AbstractMock = Abstract(class Mock {}, ...[
+					Abstract({
+						foo: fn()
+							.args(...[
+								() => checked.args[0] = true,
+								() => checked.args[1] = true,
+							])
+							.rest(() => checked.rest = true)
+							.returns(() => checked.returns = true),
+					}),
+				]);
+
+				class SubMock extends AbstractMock {
+					foo() {};
+				}
+
+				const mock = new SubMock();
+
+				mock.foo(1, 2, 3);
+
+				assert.deepEqual(checked, {
+					args: [true, true],
+					rest: true,
+					returns: true,
+				});
+			});
+
+			it('should throw throw if modifying used member.', () => {
+				const member = fn();
+
+				const AbstractMock = Abstract(class Mock {}, ...[
+					Abstract({
+						foo: member,
+					}),
+				]);
+
+				class SubMock extends AbstractMock {
+					foo() {};
+				}
+
+				const mock = new SubMock();
+
+				mock.foo();
+
+				assert.throws(() => member.args, {
+					name: 'Error',
+					message: 'This member is used then can not be modified.',
+				});
+			});
 		});
 	});
 });
