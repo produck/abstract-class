@@ -95,13 +95,20 @@ export namespace Member {
 
 export const any: MemberOperand;
 
-interface FunctionMemberOperand extends MemberOperand {
+type FnMemberOperand<
+	HArg extends boolean = true,
+	HRes extends boolean = true,
+	HRet extends boolean = true
+> = {
 	get(value: NormalFunction): NormalFunction;
-	args(): this;
-	rest(): this;
-	returns(): Omit<this, 'returns'>;
-}
+} & (
+	HArg extends true ? { args(): FnMemberOperand<false, HRes, HRet> } : {}
+) & (
+	HRes extends true ? { rest(): FnMemberOperand<HArg, false, HRet> } : {}
+) & (
+	HRet extends true ? { returns(): FnMemberOperand<HArg, HRes, false> } : {}
+) & MemberOperand;
 
-type FunctionMemberOperandFactory = () => FunctionMemberOperand;
+type FunctionMemberOperandFactory = () => FnMemberOperand;
 
 export const fn: FunctionMemberOperandFactory;
