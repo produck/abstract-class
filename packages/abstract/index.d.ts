@@ -95,19 +95,34 @@ export namespace Member {
 
 export const any: MemberOperand;
 
+type ExtractReturnTypes<T extends readonly NormalFunction[]> = {
+	[K in keyof T]: T[K] extends NormalFunction<infer R> ? R : never;
+};
+
 type FnMemberOperand<
 	HArg extends boolean = true,
 	HRes extends boolean = true,
-	HRet extends boolean = true
-> = {
-	get(value: NormalFunction): NormalFunction;
-} & (
-	HArg extends true ? { args(): FnMemberOperand<false, HRes, HRet> } : {}
-) & (
-	HRes extends true ? { rest(): FnMemberOperand<HArg, false, HRet> } : {}
-) & (
-	HRet extends true ? { returns(): FnMemberOperand<HArg, HRes, false> } : {}
-) & MemberOperand;
+	HRet extends boolean = true,
+	TArg extends readonly unknown[] = [],
+	TRes = unknown,
+	TRet = unknown
+> = MemberOperand<
+	(...args: [...TArg, ...TRes[]]) => TRet
+> & (HArg extends true ? {
+	args<
+		PT extends readonly NormalFunction[]
+	>(
+		...parsers: PT
+	): FnMemberOperand<false, HRes, HRet, ExtractReturnTypes<PT>, TRes, TRet>
+} : {}) & (HRes extends true ? {
+	rest<P extends NormalFunction>(
+		parser: P
+	): FnMemberOperand<HArg, false, HRet, TArg, ReturnType<P>, TRet>
+} : {}) & (HRet extends true ? {
+	returns<P extends NormalFunction>(
+		parser: P
+	): FnMemberOperand<HArg, HRes, false, TArg, TRes, ReturnType<P>>
+} : {});
 
 type FunctionMemberOperandFactory = () => FnMemberOperand;
 
