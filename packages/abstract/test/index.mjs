@@ -1,13 +1,10 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { Member, fn } from '../src/index.mjs';
+import Abstract, { fn, any, defineMember } from '../src/index.mjs';
+import * as Member from '../src/Member.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
-
-const GOOD_PROPERTY_LIST = [
-	'foo', 0, Symbol(),
-];
 
 const BAD_PROPERTY_LIST = [
 	true, null, undefined, BigInt(1),
@@ -18,60 +15,6 @@ const BAD_MEMBER_LIST = [
 	true, null, BigInt(1),
 	[], {}, new Date(), () => {},
 ];
-
-describe('::Member', () => {
-	describe('::Member()~define()', () => {
-		it('should throw if bad get.', () => {
-			assert.throws(() => Member.Member(), {
-				name: 'TypeError',
-				message: 'Invalid "arg[0] as get", one "function" expected.',
-			});
-		});
-
-		it('should throw if bad get.', () => {
-			assert.throws(() => Member.Member(null), {
-				name: 'TypeError',
-				message: 'Invalid "arg[0] as get", one "function" expected.',
-			});
-		});
-
-		it('should create a member', () => {
-			assert.ok(typeof Member.Member(_ => _) === 'object');
-		});
-	});
-
-	describe('.isMember()', () => {
-		it('should be false.', () => {
-			for (const badMember of BAD_MEMBER_LIST) {
-				assert.equal(Member.isMember(badMember), false);
-			}
-		});
-
-		it('should be true.', () => {
-			assert.equal(Member.isMember(Member.Any), true);
-		});
-	});
-
-	describe('.isProperty()', () => {
-		it('should be false.', () => {
-			for (const badProperty of BAD_PROPERTY_LIST) {
-				assert.equal(Member.isProperty(badProperty), false);
-			}
-		});
-
-		it('should be true.', () => {
-			for (const goodProperty of GOOD_PROPERTY_LIST) {
-				assert.equal(Member.isProperty(goodProperty), true);
-			}
-		});
-	});
-
-	describe('.Any', () => {
-		it('should be a member as any type existed.', () => {
-			assert.ok('Any' in Member);
-		});
-	});
-});
 
 describe('AbstractToken', () => {
 	class Mock {};
@@ -117,7 +60,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract({ foo: Member.Any });
+				const group = Abstract({ foo: any });
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -130,7 +73,7 @@ describe('AbstractToken', () => {
 						continue;
 					}
 
-					assert.throws(() => Abstract(badProperty, Member.Any), {
+					assert.throws(() => Abstract(badProperty, any), {
 						name: 'TypeError',
 						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
 					});
@@ -147,7 +90,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract('foo', Member.Any);
+				const group = Abstract('foo', any);
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -193,7 +136,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract.Static({ foo: Member.Any });
+				const group = Abstract.Static({ foo: any });
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -202,7 +145,7 @@ describe('AbstractToken', () => {
 		describe('(property, member)', () => {
 			it('should throw if bad property.', () => {
 				for (const badProperty of BAD_PROPERTY_LIST) {
-					assert.throws(() => Abstract.Static(badProperty, Member.Any), {
+					assert.throws(() => Abstract.Static(badProperty, any), {
 						name: 'TypeError',
 						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
 					});
@@ -219,7 +162,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract.Static('foo', Member.Any);
+				const group = Abstract.Static('foo', any);
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -258,7 +201,7 @@ describe('AbstractToken', () => {
 		it('should define an abstract class with field groups.', () => {
 			Abstract(Mock, ...[
 				Abstract({
-					foo: Member.Any,
+					foo: any,
 				}),
 			]);
 		});
@@ -302,12 +245,12 @@ describe('AbstractToken', () => {
 					}
 				}, ...[
 					Abstract.Static({
-						Foo: Member.Any,
-						Bar: Member.Any,
+						Foo: any,
+						Bar: any,
 					}),
 					Abstract({
-						name: Member.Any,
-						bar: Member.Any,
+						name: any,
+						bar: any,
 					}),
 				]);
 
@@ -388,6 +331,26 @@ describe('AbstractToken', () => {
 			});
 
 		});
+	});
+});
+
+describe('::defineMember()', () => {
+	it('should throw if bad get.', () => {
+		assert.throws(() => defineMember(), {
+			name: 'TypeError',
+			message: 'Invalid "arg[0] as get", one "function" expected.',
+		});
+	});
+
+	it('should throw if bad get.', () => {
+		assert.throws(() => defineMember(null), {
+			name: 'TypeError',
+			message: 'Invalid "arg[0] as get", one "function" expected.',
+		});
+	});
+
+	it('should create a member', () => {
+		assert.ok(typeof defineMember(_ => _) === 'object');
 	});
 });
 

@@ -81,19 +81,9 @@ declare const Abstract: AbstractToken;
 
 export default Abstract;
 
-export namespace Member {
-	export function Member<T>(
-		transform: (value: T) => T
-	): MemberOperand<T>;
-
-	export function isMember(value: unknown): boolean;
-	export function isProperty(value: unknown): boolean;
-	export const PROPERTY_TYPE_LIST: ['number', 'string', 'symbol'];
-	export { Member as define };
-	export const Any: MemberOperand;
-}
-
 export const any: MemberOperand;
+export const unknown: MemberOperand;
+export const defineMember: <T>(parser: (value: T) => T) => MemberOperand<T>;
 
 type ExtractReturnTypes<T extends readonly NormalFunction[]> = {
 	[K in keyof T]: T[K] extends NormalFunction<infer R> ? R : never;

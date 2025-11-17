@@ -5,4 +5,12 @@ export default Object.freeze(Object.assign(passthrough, {
 	static: passthrough,
 }));
 
-export const Member = Object.freeze({ Any: {} });
+const FN = {
+	args: () => FN,
+	rest: () => FN,
+	returns: () => FN,
+};
+
+export { passthrough as defineMember };
+export const fn = () => FN;
+export { passthrough as any, passthrough as unknown };
