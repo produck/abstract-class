@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { fn, any, defineMember } from '../src/index.mjs';
+import Abstract, { Member as _, defineMember } from '../src/index.mjs';
 import * as Member from '../src/Member.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
@@ -60,7 +60,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract({ foo: any });
+				const group = Abstract({ foo: _.Any });
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -73,7 +73,7 @@ describe('AbstractToken', () => {
 						continue;
 					}
 
-					assert.throws(() => Abstract(badProperty, any), {
+					assert.throws(() => Abstract(badProperty, _.Any), {
 						name: 'TypeError',
 						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
 					});
@@ -90,7 +90,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract('foo', any);
+				const group = Abstract('foo', _.Any);
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -136,7 +136,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract.Static({ foo: any });
+				const group = Abstract.Static({ foo: _.Any });
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -145,7 +145,7 @@ describe('AbstractToken', () => {
 		describe('(property, member)', () => {
 			it('should throw if bad property.', () => {
 				for (const badProperty of BAD_PROPERTY_LIST) {
-					assert.throws(() => Abstract.Static(badProperty, any), {
+					assert.throws(() => Abstract.Static(badProperty, _.Any), {
 						name: 'TypeError',
 						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
 					});
@@ -162,7 +162,7 @@ describe('AbstractToken', () => {
 			});
 
 			it('should return a FieldGroup.', () => {
-				const group = Abstract.Static('foo', any);
+				const group = Abstract.Static('foo', _.Any);
 
 				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
 			});
@@ -201,7 +201,7 @@ describe('AbstractToken', () => {
 		it('should define an abstract class with field groups.', () => {
 			Abstract(Mock, ...[
 				Abstract({
-					foo: any,
+					foo: _.Any,
 				}),
 			]);
 		});
@@ -245,12 +245,12 @@ describe('AbstractToken', () => {
 					}
 				}, ...[
 					Abstract.Static({
-						Foo: any,
-						Bar: any,
+						Foo: _.Any,
+						Bar: _.Any,
 					}),
 					Abstract({
-						name: any,
-						bar: any,
+						name: _.Any,
+						bar: _.Any,
 					}),
 				]);
 
@@ -354,37 +354,37 @@ describe('::defineMember()', () => {
 	});
 });
 
-describe('::fn()', () => {
-	it('should create a fn member.', () => {
-		assert.ok(Member.isMember(fn()));
+describe('::_.Method()', () => {
+	it('should create a _.Method member.', () => {
+		assert.ok(Member.isMember(_.Method()));
 	});
 
 	describe('.<operate>', function () {
 		it('should throw if bad operate.', () => {
-			assert.throws(() => fn().bad, {
+			assert.throws(() => _.Method().bad, {
 				name: 'Error',
 				message: 'Only "args, rest, returns" is available.',
 			});
 		});
 
 		it('should be able to access `.get`', () => {
-			assert.ok(typeof fn().get === 'function');
+			assert.ok(typeof _.Method().get === 'function');
 		});
 
 		describe('args()', () => {
-			it('should throw if any bad parser.', () => {
-				assert.throws(() => fn().args(v => v, null), {
+			it('should throw if _.Any bad parser.', () => {
+				assert.throws(() => _.Method().args(v => v, null), {
 					name: 'TypeError',
 					message: 'Invalid "args[1]", one "function" expected.',
 				});
 			});
 
 			it('should get the member itself.', () => {
-				assert.ok(Member.isMember(fn().args(v => v)));
+				assert.ok(Member.isMember(_.Method().args(v => v)));
 			});
 
 			it('should throw if called exceed once.', () => {
-				assert.throws(() => fn().args(v => v).args(v => v), {
+				assert.throws(() => _.Method().args(v => v).args(v => v), {
 					name: 'Error',
 					message: 'Operator .args() can only be called once.',
 				});
@@ -393,18 +393,18 @@ describe('::fn()', () => {
 
 		describe('rest()', () => {
 			it('should throw if bad parser.', () => {
-				assert.throws(() => fn().rest(null), {
+				assert.throws(() => _.Method().rest(null), {
 					name: 'TypeError',
 					message: 'Invalid "args[0]", one "function" expected.',
 				});
 			});
 
 			it('should get the member itself.', () => {
-				assert.ok(Member.isMember(fn().rest(v => v)));
+				assert.ok(Member.isMember(_.Method().rest(v => v)));
 			});
 
 			it('should throw if called exceed once.', () => {
-				assert.throws(() => fn().rest(v => v).rest(v => v), {
+				assert.throws(() => _.Method().rest(v => v).rest(v => v), {
 					name: 'Error',
 					message: 'Operator .rest() can only be called once.',
 				});
@@ -413,18 +413,18 @@ describe('::fn()', () => {
 
 		describe('returns()', () => {
 			it('should throw if bad parser.', () => {
-				assert.throws(() => fn().returns(null), {
+				assert.throws(() => _.Method().returns(null), {
 					name: 'TypeError',
 					message: 'Invalid "args[0]", one "function" expected.',
 				});
 			});
 
 			it('should get the member itself.', () => {
-				assert.ok(Member.isMember(fn().returns(v => v)));
+				assert.ok(Member.isMember(_.Method().returns(v => v)));
 			});
 
 			it('should throw if called exceed once.', () => {
-				assert.throws(() => fn().returns(v => v).returns(v => v), {
+				assert.throws(() => _.Method().returns(v => v).returns(v => v), {
 					name: 'Error',
 					message: 'Operator .returns() can only be called once.',
 				});
@@ -434,7 +434,7 @@ describe('::fn()', () => {
 		describe('~AbstractMember', () => {
 			const AbstractMock = Abstract(class Mock {}, ...[
 				Abstract({
-					foo: fn(),
+					foo: _.Method(),
 				}),
 			]);
 
@@ -470,7 +470,7 @@ describe('::fn()', () => {
 
 				const AbstractMock = Abstract(class Mock {}, ...[
 					Abstract({
-						foo: fn()
+						foo: _.Method()
 							.args(...[
 								() => checked.args[0] = true,
 								() => checked.args[1] = true,
@@ -496,7 +496,7 @@ describe('::fn()', () => {
 			});
 
 			it('should throw throw if modifying used member.', () => {
-				const member = fn();
+				const member = _.Method();
 
 				const AbstractMock = Abstract(class Mock {}, ...[
 					Abstract({
@@ -520,3 +520,5 @@ describe('::fn()', () => {
 		});
 	});
 });
+
+import './Erase.mjs';

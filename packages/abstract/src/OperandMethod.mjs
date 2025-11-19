@@ -31,7 +31,7 @@ const operators = {
 const RESERVED = ['get'];
 const OPERATORS_DESCRIPTION = Object.keys(operators).join(', ');
 
-export const defineFunctionMember = () => {
+export const defineMethodMember = () => {
 	const schemas = {
 		args: [],
 		rest: (value) => value,

@@ -21,5 +21,4 @@ Object.freeze(Token);
 
 export default Token;
 export { defineMember };
-export { defineFunctionMember as fn } from './Function.mjs';
-export { Any as any, Any as unknown } from './Member.mjs';
+export * as Member from './Operand.mjs';

@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { it } from 'node:test';
 
-import Abstract, { any } from '../index.mjs';
+import Abstract, { any } from '../src/Erase/index.mjs';
 
 it('should ok.', () => {
 	const AbstractMock = Abstract(class extends WeakMap {

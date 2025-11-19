@@ -1,7 +1,7 @@
 import * as FieldGroup from './FieldGroup.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
-function isConstructor(value) {
+export function isConstructor(value) {
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		(class extends value{});
