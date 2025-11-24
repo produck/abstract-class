@@ -19,6 +19,9 @@
 		"typescript-eslint": "^8.46.2"
 	},
 	"workspaces": [
-		"packages/abstract"
+		"packages/abstract",
+		"packages/abstract-token",
+		"packages/abstract-member",
+		"packages/abstract-member-zod"
 	]
 }

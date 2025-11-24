@@ -26,7 +26,9 @@ function ProxyHandler(members, fieldName) {
 			}
 
 			if (property in target) {
-				return members[property].get(Reflect.get(target, property, receiver));
+				const value = Reflect.get(target, property, receiver);
+
+				return members[property].get(value, receiver);
 			}
 
 			throw new Error(`${fieldName} member "${property}" is NOT implemented.`);
