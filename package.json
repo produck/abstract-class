@@ -10,13 +10,13 @@
 		"publish": "npm run lint && npm run test && lerna publish --no-private"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.38.0",
+		"@eslint/js": "^9.39.1",
 		"@produck/eslint-rules": "^0.2.6",
-		"@types/node": "^24.9.2",
+		"@types/node": "^24.10.1",
 		"c8": "^10.1.3",
-		"eslint": "^9.38.0",
-		"lerna": "^9.0.0",
-		"typescript-eslint": "^8.46.2"
+		"eslint": "^9.39.1",
+		"lerna": "^9.0.1",
+		"typescript-eslint": "^8.47.0"
 	},
 	"workspaces": [
 		"packages/abstract",
