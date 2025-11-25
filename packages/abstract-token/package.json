@@ -1,15 +1,7 @@
 {
-	"name": "@produck/es-abstract",
-	"version": "0.1.0",
-	"description": "Keyword \"abstract\" in ECMAScript",
-	"keywords": [
-		"es",
-		"abstract",
-		"lang",
-		"keyword",
-		"syntax",
-		"meta"
-	],
+	"name": "@produck/es-abstract-token",
+	"version": "0.0.0",
+	"description": "",
 	"license": "MIT",
 	"author": "ChaosLee",
 	"publishConfig": {
@@ -26,8 +18,8 @@
 			"import": "./src/Erase/index.mjs"
 		}
 	},
-	"scripts": {},
-	"dependencies": {
-		"@produck/es-abstract-token": "^0.0.0"
+	"scripts": {
+		"test": "node ./test/index.mjs",
+		"test:only": "node --test-only ./test/index.mjs"
 	}
 }

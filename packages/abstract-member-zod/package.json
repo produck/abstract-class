@@ -1,0 +1,14 @@
+{
+  "name": "@produck/es-abstract-member-zod",
+  "version": "0.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": "ChaosLee",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+  },
+  "devDependencies": {
+    "@produck/es-abstract-token": "^0.0.0"
+  }
+}
