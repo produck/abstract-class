@@ -1,14 +1,27 @@
 {
-  "name": "@produck/es-abstract-member",
-  "version": "0.0.0",
-  "description": "",
-  "license": "MIT",
-  "author": "ChaosLee",
-  "type": "module",
-  "main": "src/index.mjs",
-  "scripts": {
-  },
-  "devDependencies": {
-    "@produck/es-abstract-token": "^0.0.0"
-  }
+	"name": "@produck/es-abstract-member",
+	"version": "0.0.0",
+	"description": "",
+	"license": "MIT",
+	"author": "ChaosLee",
+	"publishConfig": {
+		"access": "public"
+	},
+	"type": "module",
+	"main": "src/index.mjs",
+	"exports": {
+		"types": "./index.d.ts",
+		"import": "./src/index.mjs"
+	},
+	"files": [
+		"src",
+		"index.d.ts"
+	],
+	"scripts": {
+		"test": "node ./test/index.mjs",
+		"test:only": "node --test-only ./test/index.mjs"
+	},
+	"devDependencies": {
+		"@produck/es-abstract-token": "^0.0.0"
+	}
 }
