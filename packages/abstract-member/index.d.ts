@@ -32,7 +32,7 @@ type MethodMember<
 	TArg extends readonly unknown[] = [],
 	TRes = unknown,
 	TRet = unknown
-> = NormalFunction<(...args: [...TArg, ...TRes[]]) => TRet> &
+> = NormalFunction<(..._: [...TArg, ...TRes[]]) => TRet> &
 	(HArg extends true
 		? {
 				args<PT extends readonly NormalFunction[]>(

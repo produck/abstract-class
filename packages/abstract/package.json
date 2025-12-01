@@ -19,13 +19,15 @@
 	"main": "src/index.mjs",
 	"types": "index.d.ts",
 	"exports": {
-		"types": "./index.d.ts",
-		"import": "./src/index.mjs",
-		"erase": {
+		".": {
 			"types": "./index.d.ts",
-			"import": "./src/Erase/index.mjs"
+			"import": "./src/index.mjs"
 		}
 	},
+	"files": [
+		"src",
+		"index.d.ts"
+	],
 	"scripts": {},
 	"dependencies": {
 		"@produck/es-abstract-token": "^0.0.0",

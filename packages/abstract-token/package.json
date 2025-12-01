@@ -11,9 +11,11 @@
 	"main": "src/index.mjs",
 	"types": "index.d.ts",
 	"exports": {
-		"types": "./index.d.ts",
-		"import": "./src/index.mjs",
-		"erase": {
+		".": {
+			"types": "./index.d.ts",
+			"import": "./src/index.mjs"
+		},
+		"./erase": {
 			"types": "./index.d.ts",
 			"import": "./src/Erase/index.mjs"
 		}
