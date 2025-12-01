@@ -1,6 +1,6 @@
 import { AbstractConstructor } from './Constructor.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
-import { define as defineMember } from './Member.mjs';
+import { define as defineMember, Any, isMember } from './Member.mjs';
 
 const Token = Object.assign(function AbstractToken(...operands) {
 	const { length } = operands;
@@ -20,5 +20,4 @@ Object.defineProperty(Token, 'static', { get: () => Token.Static });
 Object.freeze(Token);
 
 export default Token;
-export { defineMember };
-export * as Member from './Operand.mjs';
+export { defineMember, isMember, Any, Any as Unknown };

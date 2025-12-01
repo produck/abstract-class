@@ -1,4 +1,4 @@
-import * as Member from './Member.mjs';
+import { defineMember } from '@produck/es-abstract-token';
 
 const operators = {
 	args: (...parsers) => {
@@ -46,7 +46,7 @@ export const defineMethodMember = () => {
 
 	let used = false;
 
-	const member = Member.define(function parser(functionMember) {
+	const member = defineMember(function parser(functionMember) {
 		if (typeof functionMember !== 'function') {
 			throw new TypeError('Invalid member, one "function" expected.');
 		}

@@ -28,6 +28,7 @@
 	},
 	"scripts": {},
 	"dependencies": {
-		"@produck/es-abstract-token": "^0.0.0"
+		"@produck/es-abstract-token": "^0.0.0",
+		"@produck/es-abstract-member": "^0.0.0"
 	}
 }

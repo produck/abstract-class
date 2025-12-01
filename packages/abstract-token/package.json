@@ -18,6 +18,10 @@
 			"import": "./src/Erase/index.mjs"
 		}
 	},
+	"files": [
+		"src",
+		"index.d.ts"
+	],
 	"scripts": {
 		"test": "node ./test/index.mjs",
 		"test:only": "node --test-only ./test/index.mjs"

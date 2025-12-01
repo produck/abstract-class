@@ -1,0 +1,172 @@
+import * as assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
+import Abstract, { isMember } from '@produck/es-abstract-token';
+import * as _ from '../src/index.mjs';
+
+describe('::_.Method()', () => {
+	it('should create a _.Method member.', () => {
+		isMember(_.Method());
+	});
+
+	describe('.<operate>', function () {
+		it('should throw if bad operate.', () => {
+			assert.throws(() => _.Method().bad, {
+				name: 'Error',
+				message: 'Only "args, rest, returns" is available.',
+			});
+		});
+
+		it('should be able to access `.get`', () => {
+			assert.ok(typeof _.Method().get === 'function');
+		});
+
+		describe('args()', () => {
+			it('should throw if _.Any bad parser.', () => {
+				assert.throws(() => _.Method().args(v => v, null), {
+					name: 'TypeError',
+					message: 'Invalid "args[1]", one "function" expected.',
+				});
+			});
+
+			it('should get the member itself.', () => {
+				isMember(_.Method().args(v => v));
+			});
+
+			it('should throw if called exceed once.', () => {
+				assert.throws(() => _.Method().args(v => v).args(v => v), {
+					name: 'Error',
+					message: 'Operator .args() can only be called once.',
+				});
+			});
+		});
+
+		describe('rest()', () => {
+			it('should throw if bad parser.', () => {
+				assert.throws(() => _.Method().rest(null), {
+					name: 'TypeError',
+					message: 'Invalid "args[0]", one "function" expected.',
+				});
+			});
+
+			it('should get the member itself.', () => {
+				assert.ok(isMember(_.Method().rest(v => v)));
+			});
+
+			it('should throw if called exceed once.', () => {
+				assert.throws(() => _.Method().rest(v => v).rest(v => v), {
+					name: 'Error',
+					message: 'Operator .rest() can only be called once.',
+				});
+			});
+		});
+
+		describe('returns()', () => {
+			it('should throw if bad parser.', () => {
+				assert.throws(() => _.Method().returns(null), {
+					name: 'TypeError',
+					message: 'Invalid "args[0]", one "function" expected.',
+				});
+			});
+
+			it('should get the member itself.', () => {
+				assert.ok(isMember(_.Method().returns(v => v)));
+			});
+
+			it('should throw if called exceed once.', () => {
+				assert.throws(() => _.Method().returns(v => v).returns(v => v), {
+					name: 'Error',
+					message: 'Operator .returns() can only be called once.',
+				});
+			});
+		});
+
+		describe('~AbstractMember', () => {
+			const AbstractMock = Abstract(class Mock {}, ...[
+				Abstract({
+					foo: _.Method(),
+				}),
+			]);
+
+			it('should throw if bad implementation.', () => {
+				class BadSubMock extends AbstractMock {
+					foo = null;
+				}
+
+				const mock = new BadSubMock();
+
+				assert.throws(() => mock.foo, {
+					name: 'TypeError',
+					message: 'Invalid member, one "function" expected.',
+				});
+			});
+
+			it('should be checked by default schemas.', () => {
+				class SubMock extends AbstractMock {
+					foo() {};
+				}
+
+				const mock = new SubMock();
+
+				mock.foo(null);
+			});
+
+			it('should be checked by schemas.', () => {
+				const checked = {
+					args: [false, false],
+					rest: false,
+					returns: false,
+				};
+
+				const AbstractMock = Abstract(class Mock {}, ...[
+					Abstract({
+						foo: _.Method()
+							.args(...[
+								() => checked.args[0] = true,
+								() => checked.args[1] = true,
+							])
+							.rest(() => checked.rest = true)
+							.returns(() => checked.returns = true),
+					}),
+				]);
+
+				class SubMock extends AbstractMock {
+					foo() {};
+				}
+
+				const mock = new SubMock();
+
+				mock.foo(1, 2, 3);
+
+				assert.deepEqual(checked, {
+					args: [true, true],
+					rest: true,
+					returns: true,
+				});
+			});
+
+			it('should throw throw if modifying used member.', () => {
+				const member = _.Method();
+
+				const AbstractMock = Abstract(class Mock {}, ...[
+					Abstract({
+						foo: member,
+					}),
+				]);
+
+				class SubMock extends AbstractMock {
+					foo() {};
+				}
+
+				const mock = new SubMock();
+
+				mock.foo();
+
+				assert.throws(() => member.args, {
+					name: 'Error',
+					message: 'This member is used then can not be modified.',
+				});
+			});
+		});
+	});
+});

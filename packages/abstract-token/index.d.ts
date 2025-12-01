@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-type NormalFunction<V = unknown> = (...args: unknown[]) => V;
+export type NormalFunction<V = unknown> = (...args: unknown[]) => V;
 
-interface MemberOperand<V = unknown> {
+export interface MemberOperand<V = unknown> {
 	get: NormalFunction<V>;
 }
 
@@ -20,7 +20,7 @@ interface FieldGroup {
 }
 
 type EmptyFieldGroup = { [Instance]: {}; [Static]: {} };
-type ConstructorLike = abstract new (...args: unknown[]) => unknown;
+export type ConstructorLike = abstract new (...args: unknown[]) => unknown;
 
 type MergeFieldGroup<LFG extends FieldGroup, RFG extends FieldGroup> = {
 	[Instance]: {} & LFG[Instance] & RFG[Instance];
@@ -81,39 +81,7 @@ declare const Abstract: AbstractToken;
 
 export default Abstract;
 
-export const any: MemberOperand;
-export const unknown: MemberOperand;
+export const Any: MemberOperand;
+export const Unknown: MemberOperand;
 export const defineMember: <T>(parser: (value: T) => T) => MemberOperand<T>;
-
-type ExtractReturnTypes<T extends readonly NormalFunction[]> = {
-	[K in keyof T]: T[K] extends NormalFunction<infer R> ? R : never;
-};
-
-type FnMemberOperand<
-	HArg extends boolean = true,
-	HRes extends boolean = true,
-	HRet extends boolean = true,
-	TArg extends readonly unknown[] = [],
-	TRes = unknown,
-	TRet = unknown
-> = MemberOperand<
-	(...args: [...TArg, ...TRes[]]) => TRet
-> & (HArg extends true ? {
-	args<
-		PT extends readonly NormalFunction[]
-	>(
-		...parsers: PT
-	): FnMemberOperand<false, HRes, HRet, ExtractReturnTypes<PT>, TRes, TRet>
-} : {}) & (HRes extends true ? {
-	rest<P extends NormalFunction>(
-		parser: P
-	): FnMemberOperand<HArg, false, HRet, TArg, ReturnType<P>, TRet>
-} : {}) & (HRet extends true ? {
-	returns<P extends NormalFunction>(
-		parser: P
-	): FnMemberOperand<HArg, HRes, false, TArg, TRes, ReturnType<P>>
-} : {});
-
-type FunctionMemberOperandFactory = () => FnMemberOperand;
-
-export const fn: FunctionMemberOperandFactory;
+export const isMember: (value: unknown) => boolean;
