@@ -1,5 +1,3 @@
-import { defineMember } from '@produck/es-abstract-token';
-
 const TYPE_NAME_LIST = [
 	'undefined',
 	'object',
@@ -21,11 +19,11 @@ export const [
 	Symbol,
 	Function,
 ] = TYPE_NAME_LIST.map(function PrimitiveTypeMember(typeName) {
-	return defineMember(function parser(value) {
+	return function parsePrimitive(value) {
 		if (typeof value !== typeName) {
 			throw new TypeError(`Invalid member, one "${typeName}" expected.`);
 		}
 
 		return value;
-	});
+	};
 });

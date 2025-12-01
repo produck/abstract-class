@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { Any, defineMember } from '../src/index.mjs';
+import Abstract, { Any } from '../src/index.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
@@ -12,7 +12,7 @@ const BAD_PROPERTY_LIST = [
 
 const BAD_MEMBER_LIST = [
 	true, null, BigInt(1),
-	[], {}, new Date(), () => {},
+	[], {}, new Date(),
 ];
 
 describe('AbstractToken', () => {
@@ -44,7 +44,7 @@ describe('AbstractToken', () => {
 						foo: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'foo\']", one "Member" expected.',
+						message: 'Invalid "arg[0][\'foo\']", one "function" expected.',
 					});
 				}
 
@@ -53,7 +53,7 @@ describe('AbstractToken', () => {
 						[Symbol('bar')]: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "Member" expected.',
+						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "function" expected.',
 					});
 				}
 			});
@@ -83,7 +83,7 @@ describe('AbstractToken', () => {
 				for (const badMember of BAD_MEMBER_LIST) {
 					assert.throws(() => Abstract('foo', badMember), {
 						name: 'TypeError',
-						message: 'Invalid "arg[1]", one "Member" expected.',
+						message: 'Invalid "arg[1]", one "function" expected.',
 					});
 				}
 			});
@@ -120,7 +120,7 @@ describe('AbstractToken', () => {
 						foo: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'foo\']", one "Member" expected.',
+						message: 'Invalid "arg[0][\'foo\']", one "function" expected.',
 					});
 				}
 
@@ -129,7 +129,7 @@ describe('AbstractToken', () => {
 						[Symbol('bar')]: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "Member" expected.',
+						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "function" expected.',
 					});
 				}
 			});
@@ -155,7 +155,7 @@ describe('AbstractToken', () => {
 				for (const badMember of BAD_MEMBER_LIST) {
 					assert.throws(() => Abstract.Static('foo', badMember), {
 						name: 'TypeError',
-						message: 'Invalid "arg[1]", one "Member" expected.',
+						message: 'Invalid "arg[1]", one "function" expected.',
 					});
 				}
 			});
@@ -330,26 +330,6 @@ describe('AbstractToken', () => {
 			});
 
 		});
-	});
-});
-
-describe('::defineMember()', () => {
-	it('should throw if bad get.', () => {
-		assert.throws(() => defineMember(), {
-			name: 'TypeError',
-			message: 'Invalid "arg[0] as get", one "function" expected.',
-		});
-	});
-
-	it('should throw if bad get.', () => {
-		assert.throws(() => defineMember(null), {
-			name: 'TypeError',
-			message: 'Invalid "arg[0] as get", one "function" expected.',
-		});
-	});
-
-	it('should create a member', () => {
-		assert.ok(typeof defineMember(_ => _) === 'object');
 	});
 });
 

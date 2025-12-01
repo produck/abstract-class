@@ -1,5 +1,3 @@
-import { defineMember } from '@produck/es-abstract-token';
-
 const operators = {
 	args: (...parsers) => {
 		for (const [index, parser] of parsers.entries()) {
@@ -28,7 +26,6 @@ const operators = {
 	},
 };
 
-const RESERVED = ['get'];
 const OPERATORS_DESCRIPTION = Object.keys(operators).join(', ');
 
 export const defineMethodMember = () => {
@@ -46,7 +43,7 @@ export const defineMethodMember = () => {
 
 	let used = false;
 
-	const member = defineMember(function parser(functionMember) {
+	return new Proxy(function parseMember(functionMember) {
 		if (typeof functionMember !== 'function') {
 			throw new TypeError('Invalid member, one "function" expected.');
 		}
@@ -66,14 +63,8 @@ export const defineMethodMember = () => {
 
 			return schemas.returns(functionMember.apply(this, finalArgs));
 		};
-	});
-
-	return new Proxy(member, {
-		get(target, property, reciever) {
-			if (RESERVED.includes(property)) {
-				return Reflect.get(target, property, reciever);
-			}
-
+	}, {
+		get(_target, property, reciever) {
 			if (!Object.hasOwn(operators, property)) {
 				throw new Error(`Only "${OPERATORS_DESCRIPTION}" is available.`);
 			}

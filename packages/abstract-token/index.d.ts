@@ -2,11 +2,7 @@
 
 export type NormalFunction<V = unknown> = (...args: unknown[]) => V;
 
-export interface MemberOperand<V = unknown> {
-	get: NormalFunction<V>;
-}
-
-type Field = Record<string | number | symbol, MemberOperand>;
+type Field = Record<string | number | symbol, NormalFunction>;
 
 declare const Instance: unique symbol;
 declare const Static: unique symbol;
@@ -44,19 +40,19 @@ type MixinConstructor<
 > = (abstract new (...args: ConstructorParameters<C>) => {
 	[P in keyof InstanceType<C>]: InstanceType<C>[P];
 } & {
-	[P in keyof FG[Instance]]: ReturnType<FG[Instance][P]['get']>;
+	[P in keyof FG[Instance]]: ReturnType<FG[Instance][P]>;
 }) & {
 	[P in keyof C]: C[P];
 } & {
-	[P in keyof FG[Static]]: ReturnType<FG[Static][P]['get']>;
+	[P in keyof FG[Static]]: ReturnType<FG[Static][P]>;
 }
 
 interface FieldGroupGenerator<N extends Instance | Static> {
 	<F extends Field>(field: F): { [key in N]: F };
 
-	<P extends number | symbol | string, M extends MemberOperand>(
+	<P extends number | symbol | string, M extends NormalFunction>(
 		property: P,
-		accessor?: M
+		parser?: M
 	): {
 		[key in N]: { [key in P]: M };
 	};
@@ -81,7 +77,4 @@ declare const Abstract: AbstractToken;
 
 export default Abstract;
 
-export const Any: MemberOperand;
-export const Unknown: MemberOperand;
-export const defineMember: <T>(parser: (value: T) => T) => MemberOperand<T>;
-export const isMember: (value: unknown) => boolean;
+export const Any: NormalFunction;

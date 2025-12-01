@@ -14,8 +14,8 @@ const PROPERTY_EXPECTED = Member.PROPERTY_TYPE_LIST.join(' | ');
 
 export function FieldGroupProvider(symbol) {
 	function assertMember(member, role) {
-		if (!Member.isMember(member)) {
-			throw new TypeError(`Invalid "${role}", one "Member" expected.`);
+		if (typeof member !== 'function') {
+			throw new TypeError(`Invalid "${role}", one "function" expected.`);
 		}
 	}
 

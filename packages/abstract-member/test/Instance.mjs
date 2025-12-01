@@ -20,11 +20,11 @@ describe('::Instance()', () => {
 	});
 
 	it('should pass.', () => {
-		_.Instance(Date).get(new Date());
+		_.Instance(Date)(new Date());
 	});
 
 	it('should throw if instance-constructor not matched.', () => {
-		assert.throws(() => _.Instance(Date).get([]), {
+		assert.throws(() => _.Instance(Date)([]), {
 			name: 'TypeError',
 			message: 'Invalid member, one "Date" expected.',
 		});

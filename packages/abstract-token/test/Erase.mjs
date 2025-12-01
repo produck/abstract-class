@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { it } from 'node:test';
 
-import Abstract, { any } from '../src/Erase/index.mjs';
+import Abstract, { Any } from '../src/Erase/index.mjs';
 
 it('should ok.', () => {
 	const AbstractMock = Abstract(class extends WeakMap {
@@ -18,12 +18,12 @@ it('should ok.', () => {
 		}
 	}, ...[
 		Abstract.Static({
-			Foo: any,
-			Bar: any,
+			Foo: Any,
+			Bar: Any,
 		}),
 		Abstract({
-			name: any,
-			bar: any,
+			name: Any,
+			bar: Any,
 		}),
 	]);
 

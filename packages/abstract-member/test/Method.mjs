@@ -1,12 +1,12 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { isMember } from '@produck/es-abstract-token';
+import Abstract from '@produck/es-abstract-token';
 import * as _ from '../src/index.mjs';
 
 describe('::_.Method()', () => {
 	it('should create a _.Method member.', () => {
-		isMember(_.Method());
+		assert.ok(typeof _.Method() === 'function');
 	});
 
 	describe('.<operate>', function () {
@@ -18,7 +18,7 @@ describe('::_.Method()', () => {
 		});
 
 		it('should be able to access `.get`', () => {
-			assert.ok(typeof _.Method().get === 'function');
+			assert.ok(typeof _.Method() === 'function');
 		});
 
 		describe('args()', () => {
@@ -30,7 +30,7 @@ describe('::_.Method()', () => {
 			});
 
 			it('should get the member itself.', () => {
-				isMember(_.Method().args(v => v));
+				assert.ok(typeof _.Method().args(v => v) === 'function');
 			});
 
 			it('should throw if called exceed once.', () => {
@@ -50,7 +50,7 @@ describe('::_.Method()', () => {
 			});
 
 			it('should get the member itself.', () => {
-				assert.ok(isMember(_.Method().rest(v => v)));
+				assert.ok(typeof _.Method().rest(v => v) === 'function');
 			});
 
 			it('should throw if called exceed once.', () => {
@@ -70,7 +70,7 @@ describe('::_.Method()', () => {
 			});
 
 			it('should get the member itself.', () => {
-				assert.ok(isMember(_.Method().returns(v => v)));
+				assert.ok(typeof _.Method().returns(v => v) === 'function');
 			});
 
 			it('should throw if called exceed once.', () => {

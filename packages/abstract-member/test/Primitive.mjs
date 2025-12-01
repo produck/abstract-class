@@ -40,13 +40,13 @@ for (const { typeName, sample, parse } of [
 	describe(`::${typeName}()`, () => {
 		it('should pass with valid values.', () => {
 			for (const value of sample.valid) {
-				parse.get(value);
+				parse(value);
 			}
 		});
 
 		it('should throw if invalid values.', () => {
 			for (const value of sample.invalid) {
-				assert.throws(() => parse.get(value), {
+				assert.throws(() => parse(value), {
 					name: 'TypeError',
 					message: `Invalid member, one "${typeName}" expected.`,
 				});
