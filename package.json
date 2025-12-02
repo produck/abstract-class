@@ -22,6 +22,7 @@
 		"packages/abstract",
 		"packages/abstract-token",
 		"packages/abstract-member",
-		"packages/abstract-member-zod"
+		"packages/abstract-member-zod",
+		"example"
 	]
 }
