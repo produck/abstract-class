@@ -29,6 +29,6 @@
 	},
 	"devDependencies": {
 		"@produck/es-abstract-token": "^0.0.0",
-		"zod": "^4.1.13"
+		"zod": "^4.2.1"
 	}
 }
