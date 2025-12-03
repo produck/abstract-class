@@ -167,6 +167,47 @@ describe('::_.Method()', () => {
 					message: 'This member is used then can not be modified.',
 				});
 			});
+
+			it('should throw if called by invalid arguments.', () => {
+				const AbstractMock = Abstract(class Mock {}, ...[
+					Abstract({
+						foo: _.Method().args(...[
+							v => v,
+							() => {
+								throw new Error('foo');
+							},
+						]),
+						bar: _.Method().args(...[
+							v => v,
+							v => v,
+						]).rest(() => {
+							throw new Error('foo');
+						}),
+					}),
+				]);
+
+				class SubMock extends AbstractMock {
+					foo = () => {};
+					bar = () => {};
+				};
+
+				const mock = new SubMock();
+
+				assert.throws(() => mock.foo(1, 2), {
+					name: 'Error',
+					message: 'Invalid "args[1]".',
+				});
+
+				assert.throws(() => mock.foo(), {
+					name: 'Error',
+					message: 'Invalid "args[1]".',
+				});
+
+				assert.throws(() => mock.bar(1, 2, 3), {
+					name: 'Error',
+					message: 'Invalid "args[2]".',
+				});
+			});
 		});
 	});
 });

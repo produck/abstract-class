@@ -50,14 +50,19 @@ export const defineMethodMember = () => {
 
 		return function parsedFunctionMember(...args) {
 			used = true;
+			args.push(...new Array(Math.max(schemas.args.length - args.length, 0)));
 
 			const finalArgs = [];
 
 			for (const [index, value] of args.entries()) {
-				if (index < schemas.args.length) {
-					finalArgs[index] = schemas.args[index](value);
-				} else {
-					finalArgs[index] = schemas.rest(value);
+				try {
+					if (index < schemas.args.length) {
+						finalArgs[index] = schemas.args[index](value);
+					} else {
+						finalArgs[index] = schemas.rest(value);
+					}
+				} catch (cause) {
+					throw new Error(`Invalid "args[${index}]".`, { cause });
 				}
 			}
 
