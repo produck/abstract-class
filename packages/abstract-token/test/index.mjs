@@ -313,6 +313,32 @@ describe('AbstractToken', () => {
 						loose.name = 'qux';
 						assert.equal(loose.getName(), 'isqux');
 					});
+
+					it('should access target when parse.', () => {
+						const nonce = Math.trunc(Math.random() * 1000);
+						let flag = false;
+
+						const AbstractMock = Abstract(class Mock {
+							nonce = nonce;
+						}, ...[
+							Abstract({
+								foo: (value, target) => {
+									assert.equal(target, mock);
+									flag = true;
+
+									return value;
+								},
+							}),
+						]);
+
+						class SubMock extends AbstractMock {}
+
+						const mock = new SubMock();
+
+						mock.foo = nonce;
+						assert.equal(mock.foo, nonce);
+						assert.ok(flag);
+					});
 				});
 
 				describe('<Static>', () => {
@@ -325,6 +351,31 @@ describe('AbstractToken', () => {
 
 					it('should call AbstractSubMock.Foo()', () => {
 						assert.equal(AbstractSubMock.Foo(), 'AbstractSubMockStaticFoo');
+					});
+
+					it.skip('should access target when parse.', () => {
+						const nonce = Math.trunc(Math.random() * 1000);
+						let flag = false;
+
+						const AbstractMock = Abstract(class Mock {
+							static nonce = nonce;
+						}, ...[
+							Abstract.Static({
+								foo: (value, target) => {
+									assert.equal(target.nonce, nonce);
+									flag = true;
+
+									return value;
+								},
+							}),
+						]);
+
+						class SubMock extends AbstractMock {
+							static foo = nonce;
+						}
+
+						assert.equal(SubMock.foo, nonce);
+						assert.ok(flag);
 					});
 				});
 			});
