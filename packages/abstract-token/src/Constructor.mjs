@@ -13,6 +13,7 @@ export function isConstructor(value) {
 }
 
 const RESERVED_PROPERTY_LIST = ['prototype', 'constructor'];
+const EXTENDS_PROXY = Symbol();
 
 function ProxyHandler(members, fieldName) {
 	return {
@@ -36,6 +37,10 @@ function ProxyHandler(members, fieldName) {
 	};
 }
 
+export function ExtendsProxy(subConstructor) {
+	return subConstructor[EXTENDS_PROXY];
+}
+
 export function AbstractConstructor(Constructor, ...fieldGroupList) {
 	if (!isConstructor(Constructor)) {
 		throw new TypeError('Invalid "args[0]", one "constructible" expected.');
@@ -51,9 +56,10 @@ export function AbstractConstructor(Constructor, ...fieldGroupList) {
 
 	const Field = NamedFieldGroup.merge(fieldGroupList);
 	const INSTANCE_PROXY_HANDLER = ProxyHandler(Field.Instance, 'Instance');
+	const STATIC_PROXY_HANDLER = ProxyHandler(Field.Static, 'Static');
+	const EXTENDED_SET = new WeakSet();
 
 	const ConstructorProxy = new Proxy(Constructor, {
-		...ProxyHandler(Field.Static, 'Static'),
 		construct(target, argumentList, newTarget) {
 			if (newTarget === ConstructorProxy) {
 				throw new Error('Illegal construction on an abstract constructor.');
@@ -62,6 +68,23 @@ export function AbstractConstructor(Constructor, ...fieldGroupList) {
 			const instance = Reflect.construct(target, argumentList, newTarget);
 
 			return new Proxy(instance, INSTANCE_PROXY_HANDLER);
+		},
+		get(...args) {
+			const [, property, receiver] = args;
+
+			// For abstract static members.
+			if (property !== EXTENDS_PROXY) {
+				return STATIC_PROXY_HANDLER.get(...args);
+			}
+
+			if (EXTENDED_SET.has(receiver)) {
+				throw new Error('Extending once.');
+			}
+
+			EXTENDED_SET.add(receiver);
+
+			// Creating a sub consturctor.
+			return new Proxy(receiver, STATIC_PROXY_HANDLER);
 		},
 	});
 

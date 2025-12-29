@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { Any } from '../src/index.mjs';
+import Abstract, { Any, ExtendsProxy as EP } from '../src/index.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
@@ -353,8 +353,9 @@ describe('AbstractToken', () => {
 						assert.equal(AbstractSubMock.Foo(), 'AbstractSubMockStaticFoo');
 					});
 
-					it.skip('should access target when parse.', () => {
+					it.only('should access target when parse.', () => {
 						const nonce = Math.trunc(Math.random() * 1000);
+						const fooFlags = [false, false];
 						let flag = false;
 
 						const AbstractMock = Abstract(class Mock {
@@ -370,12 +371,29 @@ describe('AbstractToken', () => {
 							}),
 						]);
 
-						class SubMock extends AbstractMock {
-							static foo = nonce;
-						}
+						const SubMock = EP(class SubMock extends AbstractMock {
+							// static foo = nonce;
+							static get foo() {
+								fooFlags[0] = true;
+
+								return nonce;
+							}
+						});
 
 						assert.equal(SubMock.foo, nonce);
+						assert.deepEqual(fooFlags, [true, false]);
 						assert.ok(flag);
+
+						const SubSubMock = EP(class SubSubMock extends AbstractMock {
+							static get foo() {
+								fooFlags[1] = true;
+
+								return nonce;
+							}
+						});
+
+						assert.equal(SubSubMock.foo, nonce);
+						assert.deepEqual(fooFlags, [true, true]);
 					});
 				});
 			});
