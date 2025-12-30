@@ -2,6 +2,10 @@ import * as FieldGroup from './FieldGroup.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
 export function isConstructor(value) {
+	if (value === null) {
+		return false;
+	}
+
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		(class extends value{});
@@ -37,14 +41,26 @@ function ProxyHandler(members, fieldName) {
 	};
 }
 
-export function ExtendsProxy(subConstructor) {
-	return subConstructor[EXTENDS_PROXY];
+function assertConstructor(value, role) {
+	if (!isConstructor(value)) {
+		throw new TypeError(`Invalid "${role}", one "constructible" expected.`);
+	}
 }
 
-export function AbstractConstructor(Constructor, ...fieldGroupList) {
-	if (!isConstructor(Constructor)) {
-		throw new TypeError('Invalid "args[0]", one "constructible" expected.');
+export function ExtendsProxy(subConstructor) {
+	assertConstructor(subConstructor, 'args[0]');
+
+	const proxy = subConstructor[EXTENDS_PROXY];
+
+	if (proxy === undefined) {
+		throw new Error('This constructor is NOT extend from an abstract one.');
 	}
+
+	return proxy;
+}
+
+export function AbstractConstructor(constructor, ...fieldGroupList) {
+	assertConstructor(constructor, 'args[0]');
 
 	for (const [index, fieldGroup] of Object.entries(fieldGroupList)) {
 		if (!FieldGroup.isFieldGroup(fieldGroup)) {
@@ -55,11 +71,11 @@ export function AbstractConstructor(Constructor, ...fieldGroupList) {
 	}
 
 	const Field = NamedFieldGroup.merge(fieldGroupList);
-	const INSTANCE_PROXY_HANDLER = ProxyHandler(Field.Instance, 'Instance');
-	const STATIC_PROXY_HANDLER = ProxyHandler(Field.Static, 'Static');
-	const EXTENDED_SET = new WeakSet();
+	const instanceProxyHandler = ProxyHandler(Field.Instance, 'Instance');
+	const staticProxyHandler = ProxyHandler(Field.Static, 'Static');
+	const extendingProxySet = new WeakSet();
 
-	const ConstructorProxy = new Proxy(Constructor, {
+	const ConstructorProxy = new Proxy(constructor, {
 		construct(target, argumentList, newTarget) {
 			if (newTarget === ConstructorProxy) {
 				throw new Error('Illegal construction on an abstract constructor.');
@@ -67,24 +83,24 @@ export function AbstractConstructor(Constructor, ...fieldGroupList) {
 
 			const instance = Reflect.construct(target, argumentList, newTarget);
 
-			return new Proxy(instance, INSTANCE_PROXY_HANDLER);
+			return new Proxy(instance, instanceProxyHandler);
 		},
 		get(...args) {
 			const [, property, receiver] = args;
 
 			// For abstract static members.
 			if (property !== EXTENDS_PROXY) {
-				return STATIC_PROXY_HANDLER.get(...args);
+				return staticProxyHandler.get(...args);
 			}
 
-			if (EXTENDED_SET.has(receiver)) {
-				throw new Error('Extending once.');
+			if (extendingProxySet.has(receiver)) {
+				throw new Error('Creating extending proxy at most once');
 			}
 
-			EXTENDED_SET.add(receiver);
+			extendingProxySet.add(receiver);
 
 			// Creating a sub consturctor.
-			return new Proxy(receiver, STATIC_PROXY_HANDLER);
+			return new Proxy(receiver, staticProxyHandler);
 		},
 	});
 
