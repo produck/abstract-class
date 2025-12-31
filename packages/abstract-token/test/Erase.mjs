@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { it } from 'node:test';
 
-import Abstract, { Any } from '../src/Erase/index.mjs';
+import Abstract, { Any, SubConstructorProxy } from '../src/Erase/index.mjs';
 
 it('should ok.', () => {
 	const AbstractMock = Abstract(class extends WeakMap {
@@ -71,4 +71,5 @@ it('should ok.', () => {
 
 	loose.name = 'qux';
 	assert.equal(loose.getName(), 'isqux');
+	SubConstructorProxy(LooseSubMock);
 });
