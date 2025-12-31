@@ -26,13 +26,13 @@ type MergeFieldGroup<LFG extends FieldGroup, RFG extends FieldGroup> = {
 type MergeAllFieldGroup<T extends readonly FieldGroup[]> = T extends readonly []
 	? EmptyFieldGroup
 	: T extends readonly [infer First extends FieldGroup]
-		? First
-		: T extends readonly [
-				infer First extends FieldGroup,
-				...infer Rest extends readonly FieldGroup[]
-			]
-			? MergeFieldGroup<First, MergeAllFieldGroup<Rest>>
-			: EmptyFieldGroup;
+	? First
+	: T extends readonly [
+			infer First extends FieldGroup,
+			...infer Rest extends readonly FieldGroup[]
+	  ]
+	? MergeFieldGroup<First, MergeAllFieldGroup<Rest>>
+	: EmptyFieldGroup;
 
 type MixinConstructor<
 	C extends ConstructorLike,
@@ -45,9 +45,11 @@ type MixinConstructor<
 	[P in keyof C]: C[P];
 } & {
 	[P in keyof FG[Static]]: ReturnType<FG[Static][P]>;
-}
+};
 
-interface FieldGroupGenerator<N extends Instance | Static> {
+interface FieldGroupGenerator<
+	N extends Instance | Static,
+> {
 	<F extends Field>(field: F): { [key in N]: F };
 
 	<P extends number | symbol | string, M extends NormalFunction>(
@@ -61,10 +63,7 @@ interface FieldGroupGenerator<N extends Instance | Static> {
 type StaticFieldGroupGenerator = FieldGroupGenerator<Static>;
 
 type AbstractToken = FieldGroupGenerator<Instance> & {
-	<
-		C extends ConstructorLike,
-		FL extends readonly FieldGroup[]
-	>(
+	<C extends ConstructorLike, FL extends readonly FieldGroup[]>(
 		Constructor: C,
 		...fieldList: FL
 	): MixinConstructor<C, MergeAllFieldGroup<FL>>;
@@ -78,3 +77,7 @@ declare const Abstract: AbstractToken;
 export default Abstract;
 
 export const Any: NormalFunction;
+
+export function SubConstructorProxy<C extends ConstructorLike>(
+	subConstructor: C
+): C;
