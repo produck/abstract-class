@@ -1,18 +1,18 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { ExtendsProxy as EP } from '../src/index.mjs';
+import Abstract, { SubConstructorProxy } from '../src/index.mjs';
 
 describe('::ExtendsProxy()', () => {
 	it('should throw if not constructable.', () => {
-		assert.throws(() => EP(null), {
+		assert.throws(() => SubConstructorProxy(null), {
 			name: 'TypeError',
 			message: 'Invalid "args[0]", one "constructible" expected.',
 		});
 	});
 
 	it('should throw if not abstract consturctor.', () => {
-		assert.throws(() => EP(class {}), {
+		assert.throws(() => SubConstructorProxy(class {}), {
 			name: 'Error',
 			message: 'This constructor is NOT extend from an abstract one.',
 		});
@@ -23,9 +23,9 @@ describe('::ExtendsProxy()', () => {
 
 		class SubMock extends AbstractMock {}
 
-		EP(SubMock);
+		SubConstructorProxy(SubMock);
 
-		assert.throws(() => EP(SubMock), {
+		assert.throws(() => SubConstructorProxy(SubMock), {
 			name: 'Error',
 			message: 'Creating extending proxy at most once',
 		});
@@ -49,7 +49,7 @@ describe('::ExtendsProxy()', () => {
 			}),
 		]);
 
-		const SubMock = EP(class SubMock extends AbstractMock {
+		const SubMock = SubConstructorProxy(class SubMock extends AbstractMock {
 			// static foo = nonce;
 			static get foo() {
 				fooFlags[0] = true;
@@ -62,7 +62,7 @@ describe('::ExtendsProxy()', () => {
 		assert.deepEqual(fooFlags, [true, false]);
 		assert.ok(flag);
 
-		const SubSubMock = EP(class SubSubMock extends SubMock {
+		const SubSubMock = SubConstructorProxy(class SubSubMock extends SubMock {
 			static get foo() {
 				fooFlags[1] = true;
 

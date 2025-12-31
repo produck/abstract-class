@@ -47,7 +47,7 @@ function assertConstructor(value, role) {
 	}
 }
 
-export function ExtendsProxy(subConstructor) {
+export function SubConstructorProxy(subConstructor) {
 	assertConstructor(subConstructor, 'args[0]');
 
 	const proxy = subConstructor[EXTENDS_PROXY];

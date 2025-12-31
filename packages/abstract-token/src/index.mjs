@@ -1,4 +1,4 @@
-import { AbstractConstructor, ExtendsProxy } from './Constructor.mjs';
+import { AbstractConstructor, SubConstructorProxy } from './Constructor.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
 const Token = Object.assign(function AbstractToken(...operands) {
@@ -18,6 +18,6 @@ const Token = Object.assign(function AbstractToken(...operands) {
 Object.defineProperty(Token, 'static', { get: () => Token.Static });
 Object.freeze(Token);
 
-export { ExtendsProxy };
+export { SubConstructorProxy };
 export default Token;
 export { Any } from './Member.mjs';
