@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract from '@produck/es-abstract-token';
+import Abstract, { SubConstructorProxy } from '@produck/es-abstract-token';
 import * as _ from '../src/index.mjs';
 
 describe('::_.Method()', () => {
@@ -142,6 +142,73 @@ describe('::_.Method()', () => {
 					args: [true, true],
 					rest: true,
 					returns: true,
+				});
+			});
+
+			it.only('should access target when checking.', () => {
+				const checked = {
+					args: [false, false],
+					rest: false,
+					returns: false,
+					static: {
+						args: [false, false],
+						rest: false,
+						returns: false,
+					},
+				};
+
+				const AbstractMock = Abstract(class Mock {}, ...[
+					Abstract({
+						foo: _.Method()
+							.args((_, target) => {
+								checked.args[0] = true;
+								assert.equal(target, mock);
+							})
+							.rest((_, target) => {
+								checked.rest = true;
+								assert.equal(target, mock);
+							})
+							.returns((_, target) => {
+								checked.returns = true;
+								assert.equal(target, mock);
+							}),
+					}),
+					Abstract.Static({
+						foo: _.Method()
+							.args((_, target) => {
+								checked.static.args[0] = true;
+								assert.equal(target, SubMock);
+							})
+							.rest((_, target) => {
+								checked.static.rest = true;
+								assert.equal(target, SubMock);
+							})
+							.returns((_, target) => {
+								checked.static.returns = true;
+								assert.equal(target, SubMock);
+							}),
+					}),
+				]);
+
+				const SubMock = SubConstructorProxy(class SubMock extends AbstractMock {
+					foo() {};
+					static foo() {};
+				});
+
+				const mock = new SubMock();
+
+				mock.foo(1, 2, 3);
+				SubMock.foo(1, 2, 3);
+
+				assert.deepEqual(checked, {
+					args: [true, false],
+					rest: true,
+					returns: true,
+					static: {
+						args: [true, false],
+						rest: true,
+						returns: true,
+					},
 				});
 			});
 

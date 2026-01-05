@@ -57,16 +57,16 @@ export const defineMethodMember = () => {
 			for (const [index, value] of args.entries()) {
 				try {
 					if (index < schemas.args.length) {
-						finalArgs[index] = schemas.args[index](value);
+						finalArgs[index] = schemas.args[index](value, this);
 					} else {
-						finalArgs[index] = schemas.rest(value);
+						finalArgs[index] = schemas.rest(value, this);
 					}
 				} catch (cause) {
 					throw new Error(`Invalid "args[${index}]".`, { cause });
 				}
 			}
 
-			return schemas.returns(functionMember.apply(this, finalArgs));
+			return schemas.returns(functionMember.apply(this, finalArgs), this);
 		};
 	}, {
 		get(_target, property, reciever) {
