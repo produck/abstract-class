@@ -1,6 +1,6 @@
 {
 	"name": "@produck/es-abstract-member-zod",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "",
 	"license": "MIT",
 	"author": "ChaosLee",
@@ -28,7 +28,7 @@
 		"zod": "^4.0.0"
 	},
 	"devDependencies": {
-		"@produck/es-abstract-token": "^0.0.0",
+		"@produck/es-abstract-token": "^0.1.0",
 		"zod": "^4.3.5"
 	}
 }
