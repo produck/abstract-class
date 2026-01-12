@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-export type NormalFunction<V = unknown> = (...args: unknown[]) => V;
-
-type Field = Record<string | number | symbol, NormalFunction>;
+export type Parser<V = unknown, T = unknown> = (value?: V, target?: T) => V;
+export type Field = Record<string | number | symbol, Parser>;
 
 declare const Instance: unique symbol;
 declare const Static: unique symbol;
 
-type Instance = typeof Instance;
-type Static = typeof Static;
+export type Instance = typeof Instance;
+export type Static = typeof Static;
 
-interface FieldGroup {
+export interface FieldGroup {
 	[Instance]?: Field;
 	[Static]?: Field;
 }
 
-type EmptyFieldGroup = { [Instance]: {}; [Static]: {} };
+export type EmptyFieldGroup = { [Instance]: {}; [Static]: {} };
 export type ConstructorLike = abstract new (...args: unknown[]) => unknown;
 
 type MergeFieldGroup<LFG extends FieldGroup, RFG extends FieldGroup> = {
@@ -52,11 +51,11 @@ interface FieldGroupGenerator<
 > {
 	<F extends Field>(field: F): { [key in N]: F };
 
-	<P extends number | symbol | string, M extends NormalFunction>(
-		property: P,
-		parser?: M
+	<K extends number | symbol | string, P extends Parser>(
+		property: K,
+		parser?: P
 	): {
-		[key in N]: { [key in P]: M };
+		[key in N]: { [key in K]: P };
 	};
 }
 
@@ -75,8 +74,7 @@ type AbstractToken = FieldGroupGenerator<Instance> & {
 declare const Abstract: AbstractToken;
 
 export default Abstract;
-
-export const Any: NormalFunction;
+export const Any: Parser;
 
 export function SubConstructorProxy<C extends ConstructorLike>(
 	subConstructor: C
