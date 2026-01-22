@@ -22,17 +22,17 @@ const EXTENDS_PROXY = Symbol();
 function ProxyHandler(members, fieldName) {
 	return {
 		get(target, property, receiver) {
+			const value = Reflect.get(target, property, receiver);
+
 			if (RESERVED_PROPERTY_LIST.includes(property)) {
-				return Reflect.get(target, property, receiver);
+				return value;
 			}
 
 			if (!Object.hasOwn(members, property)) {
-				return Reflect.get(target, property, receiver);
+				return value;
 			}
 
 			if (property in target) {
-				const value = Reflect.get(target, property, receiver);
-
 				return members[property](value, receiver);
 			}
 

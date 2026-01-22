@@ -145,7 +145,7 @@ describe('::_.Method()', () => {
 				});
 			});
 
-			it.only('should access target when checking.', () => {
+			it('should access target when checking.', () => {
 				const checked = {
 					args: [false, false],
 					rest: false,
