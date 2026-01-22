@@ -1,6 +1,6 @@
 {
 	"name": "@produck/es-abstract-member",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "",
 	"license": "MIT",
 	"author": "ChaosLee",
@@ -25,6 +25,6 @@
 		"test:only": "node --test-only ./test/index.mjs"
 	},
 	"devDependencies": {
-		"@produck/es-abstract-token": "^0.1.0"
+		"@produck/es-abstract-token": "^0.2.0"
 	}
 }
