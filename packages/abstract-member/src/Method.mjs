@@ -43,7 +43,7 @@ export const defineMethodMember = () => {
 
 	let used = false;
 
-	return new Proxy(function parseMember(functionMember) {
+	return new Proxy(function parseMember(functionMember, receiver, target) {
 		if (typeof functionMember !== 'function') {
 			throw new TypeError('Invalid member, one "function" expected.');
 		}
@@ -57,16 +57,18 @@ export const defineMethodMember = () => {
 			for (const [index, value] of args.entries()) {
 				try {
 					if (index < schemas.args.length) {
-						finalArgs[index] = schemas.args[index](value, this);
+						finalArgs[index] = schemas.args[index](value, receiver, target);
 					} else {
-						finalArgs[index] = schemas.rest(value, this);
+						finalArgs[index] = schemas.rest(value, receiver, target);
 					}
 				} catch (cause) {
 					throw new Error(`Invalid "args[${index}]".`, { cause });
 				}
 			}
 
-			return schemas.returns(functionMember.apply(this, finalArgs), this);
+			const returnValue = functionMember.apply(target, finalArgs);
+
+			return schemas.returns(returnValue, receiver, target);
 		};
 	}, {
 		get(_target, property, reciever) {

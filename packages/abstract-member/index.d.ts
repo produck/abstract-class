@@ -17,7 +17,7 @@ export const Number: Parser<number>;
 export const BigInt: Parser<bigint>;
 export const String: Parser<string>;
 export const Symbol: Parser<symbol>;
-export const Function: Parser<Parser>;
+export const Function: Parser<(...args: unknown[]) => unknown>;
 
 export { Any, Any as Unknown };
 

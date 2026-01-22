@@ -145,7 +145,7 @@ describe('::_.Method()', () => {
 				});
 			});
 
-			it.only('should access target when checking.', () => {
+			it('should access target when checking.', () => {
 				const checked = {
 					args: [false, false],
 					rest: false,
@@ -212,17 +212,25 @@ describe('::_.Method()', () => {
 				});
 			});
 
-			it('should throw throw if modifying used member.', () => {
+			it.only('should throw throw if modifying used member.', () => {
 				const member = _.Method();
 
-				const AbstractMock = Abstract(class Mock {}, ...[
+				const AbstractMock = Abstract(class Mock {
+					#private = 1;
+
+					getPrivate() {
+						return this.#private;
+					}
+				}, ...[
 					Abstract({
 						foo: member,
 					}),
 				]);
 
 				class SubMock extends AbstractMock {
-					foo() {};
+					foo() {
+						this.getPrivate();
+					};
 				}
 
 				const mock = new SubMock();

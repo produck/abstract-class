@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 
-export type Parser<V = unknown, T = unknown> = (value?: V, target?: T) => V;
+export type Parser<V = unknown, T = unknown> = (value?: V, receiver?: T, target?: T) => V;
 export type Field = Record<string | number | symbol, Parser>;
 
 declare const Instance: unique symbol;
