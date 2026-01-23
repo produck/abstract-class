@@ -26,5 +26,8 @@
 	},
 	"devDependencies": {
 		"@produck/es-abstract-token": "^0.2.0"
+	},
+	"dependencies": {
+		"@produck/type-error": "^0.1.1"
 	}
 }

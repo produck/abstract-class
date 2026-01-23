@@ -1,3 +1,5 @@
+import { ThrowTypeError } from '@produck/type-error';
+
 const TYPE_NAME_LIST = [
 	'undefined',
 	'object',
@@ -21,7 +23,7 @@ export const [
 ] = TYPE_NAME_LIST.map(function PrimitiveTypeMember(typeName) {
 	return function parsePrimitive(value) {
 		if (typeof value !== typeName) {
-			throw new TypeError(`Invalid member, one "${typeName}" expected.`);
+			ThrowTypeError('member', typeName);
 		}
 
 		return value;

@@ -97,7 +97,7 @@ describe('::_.Method()', () => {
 
 				assert.throws(() => mock.foo, {
 					name: 'TypeError',
-					message: 'Invalid member, one "function" expected.',
+					message: 'Invalid "member", one "function" expected.',
 				});
 			});
 

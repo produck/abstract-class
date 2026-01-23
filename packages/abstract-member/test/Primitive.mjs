@@ -48,7 +48,7 @@ for (const { typeName, sample, parse } of [
 			for (const value of sample.invalid) {
 				assert.throws(() => parse(value), {
 					name: 'TypeError',
-					message: `Invalid member, one "${typeName}" expected.`,
+					message: `Invalid "member", one "${typeName}" expected.`,
 				});
 			}
 		});

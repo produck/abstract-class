@@ -1,9 +1,11 @@
+import { ThrowTypeError } from '@produck/type-error';
+
 export function Instance(constructor) {
 	try {
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		(class extends constructor {});
 	} catch {
-		throw new TypeError('Invalid "args[0]", one "constructible" expected.');
+		ThrowTypeError('args[0]', 'constructible');
 	}
 
 	return function parseObject(value) {
@@ -11,6 +13,6 @@ export function Instance(constructor) {
 			return value;
 		}
 
-		throw new TypeError(`Invalid member, one "${constructor.name}" expected.`);
+		ThrowTypeError('member', constructor.name);
 	};
 }

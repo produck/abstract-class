@@ -1,10 +1,10 @@
+import { ThrowTypeError } from '@produck/type-error';
+
 const operators = {
 	args: (...parsers) => {
 		for (const [index, parser] of parsers.entries()) {
 			if (typeof parser !== 'function') {
-				throw new TypeError(
-					`Invalid "args[${index}]", one "function" expected.`,
-				);
+				ThrowTypeError(`args[${index}]`, 'function');
 			}
 		}
 
@@ -12,14 +12,14 @@ const operators = {
 	},
 	rest: (parser) => {
 		if (typeof parser !== 'function') {
-			throw new TypeError('Invalid "args[0]", one "function" expected.');
+			ThrowTypeError('args[0]', 'function');
 		}
 
 		return parser;
 	},
 	returns: (parser) => {
 		if (typeof parser !== 'function') {
-			throw new TypeError('Invalid "args[0]", one "function" expected.');
+			ThrowTypeError('args[0]', 'function');
 		}
 
 		return parser;
@@ -45,7 +45,7 @@ export const defineMethodMember = () => {
 
 	return new Proxy(function parseMember(functionMember, target) {
 		if (typeof functionMember !== 'function') {
-			throw new TypeError('Invalid member, one "function" expected.');
+			ThrowTypeError('member', 'function');
 		}
 
 		return function parsedFunctionMember(...args) {
