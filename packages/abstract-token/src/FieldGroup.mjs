@@ -1,3 +1,4 @@
+import { ThrowTypeError } from '@produck/type-error';
 import * as Member from './Member.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
@@ -15,18 +16,14 @@ const PROPERTY_EXPECTED = Member.PROPERTY_TYPE_LIST.join(' | ');
 export function FieldGroupProvider(symbol) {
 	function assertMember(member, role) {
 		if (typeof member !== 'function') {
-			throw new TypeError(`Invalid "${role}", one "function" expected.`);
+			ThrowTypeError(role, 'function');
 		}
 	}
 
 	const By = {
 		NamedMember(property, member = Member.Any) {
 			if (!Member.isProperty(property)) {
-				throw new TypeError([
-					'Invalid "args[0] as property", one "',
-					PROPERTY_EXPECTED,
-					'" expected.',
-				].join(''));
+				ThrowTypeError('args[0] as property', PROPERTY_EXPECTED);
 			}
 
 			assertMember(member, 'arg[1]');

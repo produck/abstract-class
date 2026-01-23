@@ -1,3 +1,4 @@
+import { ThrowTypeError } from '@produck/type-error';
 import * as FieldGroup from './FieldGroup.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
@@ -43,7 +44,7 @@ function ProxyHandler(members, fieldName) {
 
 function assertConstructor(value, role) {
 	if (!isConstructor(value)) {
-		throw new TypeError(`Invalid "${role}", one "constructible" expected.`);
+		ThrowTypeError(role, 'constructible');
 	}
 }
 
@@ -64,9 +65,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 
 	for (const [index, fieldGroup] of Object.entries(fieldGroupList)) {
 		if (!FieldGroup.isFieldGroup(fieldGroup)) {
-			const role = `args[${Number(index) + 1}]`;
-
-			throw new TypeError(`Invalid "${role}", one "FieldGroup" expcected.`);
+			ThrowTypeError(`args[${Number(index) + 1}]`, 'FieldGroup');
 		}
 	}
 

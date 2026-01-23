@@ -188,7 +188,7 @@ describe('::AbstractToken', () => {
 			]) {
 				assert.throws(() => Abstract(Mock, badValue), {
 					name: 'TypeError',
-					message: 'Invalid "args[1]", one "FieldGroup" expcected.',
+					message: 'Invalid "args[1]", one "FieldGroup" expected.',
 				});
 			}
 		});
