@@ -1,3 +1,5 @@
+import { ThrowTypeError } from '@produck/type-error';
+
 /** @param {import('zod').ZodType} type */
 function zodParserFactory(type) {
 	if (
@@ -5,7 +7,7 @@ function zodParserFactory(type) {
 		type === null ||
 		type['~standard']?.vendor !== 'zod'
 	) {
-		throw TypeError('Invalid "args[0]", one "ZodType" expected.');
+		ThrowTypeError('args[0]', 'ZodType');
 	}
 
 	return function parseByZod(value) {
