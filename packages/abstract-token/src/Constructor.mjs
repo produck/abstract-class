@@ -1,21 +1,8 @@
+import { isConstructor } from '@produck/is-constructor';
 import { ThrowTypeError } from '@produck/type-error';
+
 import * as FieldGroup from './FieldGroup.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
-
-export function isConstructor(value) {
-	if (value === null) {
-		return false;
-	}
-
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		(class extends value{});
-
-		return true;
-	} catch {
-		return false;
-	}
-}
 
 const RESERVED_PROPERTY_LIST = ['prototype', 'constructor'];
 const EXTENDS_PROXY = Symbol();

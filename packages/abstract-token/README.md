@@ -13,8 +13,8 @@ npm install @produck/es-abstract-token
 - **Following Convention**
 
   Providing methods to represent `abstract` & `static` opertators like other
-	major programming languages. Making a native constructable function to be
-	abstract in `Abstract`.
+  major programming languages. Making a native constructable function to be
+  abstract in `Abstract`.
 
 - **Abstract Constructor**
 
@@ -34,6 +34,10 @@ npm install @produck/es-abstract-token
 
 - **Erasing in Production**
 
+- **Strict/loose Dependency** about error users.
+
+- **No Error Flag**
+
 ## Quick Start
 
 ```js
@@ -52,7 +56,7 @@ const AbstractSample = Abstract(
 			baz: Any,
 		}),
 		Abstract.Static("qux"),
-	]
+	],
 );
 
 // ❌ Error: Illegal construction on an abstract constructor.

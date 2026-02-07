@@ -29,6 +29,7 @@
 		"test:only": "node --test-only ./test/index.mjs"
 	},
 	"dependencies": {
+		"@produck/is-constructor": "^1.0.0",
 		"@produck/type-error": "^0.1.1"
 	}
 }
