@@ -70,7 +70,7 @@ export const defineMethodMember = () => {
 			return schemas.returns(functionMember.apply(target, finalArgs), target);
 		};
 	}, {
-		get(_target, property, reciever) {
+		get(_target, property, receiver) {
 			if (!Object.hasOwn(operators, property)) {
 				Ow.Error.Common(`Only "${OPERATORS_DESCRIPTION}" is available.`);
 			}
@@ -87,7 +87,7 @@ export const defineMethodMember = () => {
 				schemas[property] = operators[property](...args);
 				called[property] = true;
 
-				return reciever;
+				return receiver;
 			};
 		},
 	});
