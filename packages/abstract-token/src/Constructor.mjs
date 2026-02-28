@@ -42,7 +42,7 @@ export function SubConstructorProxy(subConstructor) {
 	const proxy = subConstructor[EXTENDS_PROXY];
 
 	if (proxy === undefined) {
-		Ow.Error.Common('This constructor is NOT extend from an abstract one.');
+		Ow.Error.Common('This constructor is NOT extended from an abstract one.');
 	}
 
 	return proxy;
