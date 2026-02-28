@@ -25,7 +25,7 @@ function ProxyHandler(members, fieldName) {
 				return members[property](value, receiver);
 			}
 
-			Ow.Error.Common(`${fieldName} member "${property}" is NOT implemented.`);
+			throw Ow.Error.Common(`${fieldName} member "${String(property)}" must be implemented in the subclass.`);
 		},
 	};
 }
