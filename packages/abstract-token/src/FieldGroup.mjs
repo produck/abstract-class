@@ -43,7 +43,7 @@ export function FieldGroupProvider(symbol) {
 			]) {
 				const member = memberRecord[property];
 
-				assertMember(member, `arg[0]['${String(property)}']`);
+				assertMember(member, `args[0]['${String(property)}']`);
 				record[property] = member;
 			}
 

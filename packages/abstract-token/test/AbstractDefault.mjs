@@ -44,7 +44,7 @@ describe('::AbstractToken', () => {
 						foo: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'foo\']", one "function" expected.',
+						message: 'Invalid "args[0][\'foo\']", one "function" expected.',
 					});
 				}
 
@@ -53,7 +53,7 @@ describe('::AbstractToken', () => {
 						[Symbol('bar')]: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "function" expected.',
+						message: 'Invalid "args[0][\'Symbol(bar)\']", one "function" expected.',
 					});
 				}
 			});
@@ -83,7 +83,7 @@ describe('::AbstractToken', () => {
 				for (const badMember of BAD_MEMBER_LIST) {
 					assert.throws(() => Abstract('foo', badMember), {
 						name: 'TypeError',
-						message: 'Invalid "arg[1]", one "function" expected.',
+						message: 'Invalid "args[1]", one "function" expected.',
 					});
 				}
 			});
@@ -120,7 +120,7 @@ describe('::AbstractToken', () => {
 						foo: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'foo\']", one "function" expected.',
+						message: 'Invalid "args[0][\'foo\']", one "function" expected.',
 					});
 				}
 
@@ -129,7 +129,7 @@ describe('::AbstractToken', () => {
 						[Symbol('bar')]: badMember,
 					}), {
 						name: 'TypeError',
-						message: 'Invalid "arg[0][\'Symbol(bar)\']", one "function" expected.',
+						message: 'Invalid "args[0][\'Symbol(bar)\']", one "function" expected.',
 					});
 				}
 			});
@@ -155,7 +155,7 @@ describe('::AbstractToken', () => {
 				for (const badMember of BAD_MEMBER_LIST) {
 					assert.throws(() => Abstract.Static('foo', badMember), {
 						name: 'TypeError',
-						message: 'Invalid "arg[1]", one "function" expected.',
+						message: 'Invalid "args[1]", one "function" expected.',
 					});
 				}
 			});
