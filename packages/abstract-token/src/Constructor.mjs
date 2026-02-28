@@ -86,7 +86,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 
 			extendingProxySet.add(receiver);
 
-			// Creating a sub consturctor.
+			// Creating a sub constructor.
 			return new Proxy(receiver, staticProxyHandler);
 		},
 	});
