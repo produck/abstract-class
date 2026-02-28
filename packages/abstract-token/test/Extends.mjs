@@ -14,7 +14,7 @@ describe('::ExtendsProxy()', () => {
 	it('should throw if not abstract consturctor.', () => {
 		assert.throws(() => SubConstructorProxy(class {}), {
 			name: 'Error',
-			message: 'This constructor is NOT extend from an abstract one.',
+			message: 'This constructor is NOT extended from an abstract one.',
 		});
 	});
 
@@ -27,7 +27,7 @@ describe('::ExtendsProxy()', () => {
 
 		assert.throws(() => SubConstructorProxy(SubMock), {
 			name: 'Error',
-			message: 'Creating extending proxy at most once',
+			message: 'Extending proxy has already been created',
 		});
 	});
 
