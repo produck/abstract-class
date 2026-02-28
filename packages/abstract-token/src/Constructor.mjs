@@ -25,7 +25,7 @@ function ProxyHandler(members, fieldName) {
 				return members[property](value, receiver);
 			}
 
-			Ow.Error.Common(`${fieldName} member "${property}" is NOT implemented.`);
+			throw Ow.Error.Common(`${fieldName} member "${String(property)}" must be implemented in the subclass.`);
 		},
 	};
 }
@@ -42,7 +42,7 @@ export function SubConstructorProxy(subConstructor) {
 	const proxy = subConstructor[EXTENDS_PROXY];
 
 	if (proxy === undefined) {
-		Ow.Error.Common('This constructor is NOT extend from an abstract one.');
+		Ow.Error.Common('This constructor is NOT extended from an abstract one.');
 	}
 
 	return proxy;
@@ -81,7 +81,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 			}
 
 			if (extendingProxySet.has(receiver)) {
-				Ow.Error.Common('Creating extending proxy at most once');
+				Ow.Error.Common('Extending proxy has already been created');
 			}
 
 			extendingProxySet.add(receiver);
