@@ -81,7 +81,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 			}
 
 			if (extendingProxySet.has(receiver)) {
-				Ow.Error.Common('Creating extending proxy at most once');
+				Ow.Error.Common('Extending proxy has already been created');
 			}
 
 			extendingProxySet.add(receiver);
