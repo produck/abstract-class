@@ -1,4 +1,6 @@
+import * as Ow from '@produck/ow';
 import { ThrowTypeError } from '@produck/type-error';
+
 import * as Member from './Member.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
@@ -51,11 +53,11 @@ export function FieldGroupProvider(symbol) {
 
 	return Object.freeze(function AbstractFieldGroup(...operands) {
 		if (operands.length < 1) {
-			throw new SyntaxError('At least 1 operand is required.');
+			Ow.Error.Syntax('At least 1 operand is required.');
 		}
 
 		if (operands.length > 2) {
-			throw new SyntaxError('The number of operands cannot exceed 2.');
+			Ow.Error.Syntax('The number of operands cannot exceed 2.');
 		}
 
 		const [first] = operands;

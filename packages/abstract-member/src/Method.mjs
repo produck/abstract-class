@@ -1,3 +1,4 @@
+import * as Ow from '@produck/ow';
 import { ThrowTypeError } from '@produck/type-error';
 
 const operators = {
@@ -62,7 +63,7 @@ export const defineMethodMember = () => {
 						finalArgs[index] = schemas.rest(value, target);
 					}
 				} catch (cause) {
-					throw new Error(`Invalid "args[${index}]".`, { cause });
+					Ow.Error.Common(`Invalid "args[${index}]".`, { cause });
 				}
 			}
 
@@ -71,15 +72,15 @@ export const defineMethodMember = () => {
 	}, {
 		get(_target, property, reciever) {
 			if (!Object.hasOwn(operators, property)) {
-				throw new Error(`Only "${OPERATORS_DESCRIPTION}" is available.`);
+				Ow.Error.Common(`Only "${OPERATORS_DESCRIPTION}" is available.`);
 			}
 
 			if (called[property]) {
-				throw new Error(`Operator .${property}() can only be called once.`);
+				Ow.Error.Common(`Operator .${property}() can only be called once.`);
 			}
 
 			if (used) {
-				throw new Error('This member is used then can not be modified.');
+				Ow.Error.Common('This member is used then can not be modified.');
 			}
 
 			return function operate(...args) {

@@ -1,3 +1,5 @@
+import * as Ow from '@produck/ow';
+
 import { AbstractConstructor, SubConstructorProxy } from './Constructor.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
@@ -5,7 +7,7 @@ const Token = Object.assign(function AbstractToken(...operands) {
 	const { length } = operands;
 
 	if (length < 1) {
-		throw new SyntaxError('At least 1 operand is required.');
+		Ow.Error.Syntax('At least 1 operand is required.');
 	}
 
 	if (typeof operands[0] === 'function') {

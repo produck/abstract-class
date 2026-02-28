@@ -1,4 +1,5 @@
 import { isConstructor } from '@produck/is-constructor';
+import * as Ow from '@produck/ow';
 import { ThrowTypeError } from '@produck/type-error';
 
 import * as FieldGroup from './FieldGroup.mjs';
@@ -24,7 +25,7 @@ function ProxyHandler(members, fieldName) {
 				return members[property](value, receiver);
 			}
 
-			throw new Error(`${fieldName} member "${property}" is NOT implemented.`);
+			Ow.Error.Common(`${fieldName} member "${property}" is NOT implemented.`);
 		},
 	};
 }
@@ -41,7 +42,7 @@ export function SubConstructorProxy(subConstructor) {
 	const proxy = subConstructor[EXTENDS_PROXY];
 
 	if (proxy === undefined) {
-		throw new Error('This constructor is NOT extend from an abstract one.');
+		Ow.Error.Common('This constructor is NOT extend from an abstract one.');
 	}
 
 	return proxy;
@@ -64,7 +65,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 	const ConstructorProxy = new Proxy(constructor, {
 		construct(target, argumentList, newTarget) {
 			if (newTarget === ConstructorProxy) {
-				throw new Error('Illegal construction on an abstract constructor.');
+				Ow.Error.Common('Illegal construction on an abstract constructor.');
 			}
 
 			const instance = Reflect.construct(target, argumentList, newTarget);
@@ -80,7 +81,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 			}
 
 			if (extendingProxySet.has(receiver)) {
-				throw new Error('Creating extending proxy at most once');
+				Ow.Error.Common('Creating extending proxy at most once');
 			}
 
 			extendingProxySet.add(receiver);

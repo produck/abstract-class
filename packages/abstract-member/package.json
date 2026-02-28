@@ -28,6 +28,7 @@
 		"@produck/es-abstract-token": "^0.2.1"
 	},
 	"dependencies": {
+		"@produck/ow": "^0.2.1",
 		"@produck/type-error": "^0.1.3"
 	}
 }
