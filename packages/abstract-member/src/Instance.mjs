@@ -1,10 +1,8 @@
+import { isConstructor } from '@produck/is-constructor';
 import { ThrowTypeError } from '@produck/type-error';
 
 export function Instance(constructor) {
-	try {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		(class extends constructor {});
-	} catch {
+	if (!isConstructor(constructor)) {
 		ThrowTypeError('args[0]', 'constructible');
 	}
 

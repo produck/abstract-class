@@ -2,6 +2,15 @@
 	"name": "@produck/es-abstract-token",
 	"version": "0.2.1",
 	"description": "",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/produck/abstract-class.git",
+		"directory": "packages/abstract-token"
+	},
+	"homepage": "https://github.com/produck/abstract-class#readme",
+	"bugs": {
+		"url": "https://github.com/produck/abstract-class/issues"
+	},
 	"license": "MIT",
 	"author": "ChaosLee",
 	"publishConfig": {

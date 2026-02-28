@@ -2,6 +2,15 @@
 	"name": "@produck/es-abstract-member",
 	"version": "0.2.1",
 	"description": "",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/produck/abstract-class.git",
+		"directory": "packages/abstract-member"
+	},
+	"homepage": "https://github.com/produck/abstract-class#readme",
+	"bugs": {
+		"url": "https://github.com/produck/abstract-class/issues"
+	},
 	"license": "MIT",
 	"author": "ChaosLee",
 	"publishConfig": {
@@ -28,6 +37,7 @@
 		"@produck/es-abstract-token": "^0.2.1"
 	},
 	"dependencies": {
+		"@produck/is-constructor": "^1.0.0",
 		"@produck/ow": "^0.2.1",
 		"@produck/type-error": "^0.1.3"
 	}
