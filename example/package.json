@@ -10,6 +10,6 @@
 	"devDependencies": {
 		"@produck/es-abstract": "*",
 		"@produck/es-abstract-member-zod": "*",
-		"zod": "^4.3.5"
+		"zod": "^4.3.6"
 	}
 }
