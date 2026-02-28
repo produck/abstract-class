@@ -28,7 +28,7 @@ export function FieldGroupProvider(symbol) {
 				ThrowTypeError('args[0] as property', PROPERTY_EXPECTED);
 			}
 
-			assertMember(member, 'arg[1]');
+			assertMember(member, 'args[1]');
 
 			return Object.freeze({
 				[symbol]: Object.freeze({ [property]: member }),
