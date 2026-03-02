@@ -38,8 +38,8 @@
 		"test:only": "node --test-only ./test/index.mjs"
 	},
 	"dependencies": {
-		"@produck/is-constructor": "^1.0.0",
-		"@produck/ow": "^0.2.1",
-		"@produck/type-error": "^0.1.3"
+		"@produck/is-constructor": "^1.0.1",
+		"@produck/ow": "^0.2.3",
+		"@produck/type-error": "^0.1.5"
 	}
 }
