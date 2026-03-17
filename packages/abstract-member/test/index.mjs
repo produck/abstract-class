@@ -8,6 +8,7 @@ it('should export Any, Unknown', () => {
 	assert.ok(typeof Any === 'function');
 });
 
-import './Primitive.mjs';
-import './Instance.mjs';
-import './Method.mjs';
+import './Primitive.spec.mjs';
+import './Instance.spec.mjs';
+import './Method.spec.mjs';
+import './Promise.spec.mjs';
