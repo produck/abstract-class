@@ -6,7 +6,7 @@
 		"deps:ci-install": "npm install --include=optional",
 		"lint": "eslint --fix",
 		"test": "npm run --workspaces build:version --if-present && npm test --workspaces --if-present",
-		"coverage": "c8 --reporter=lcov npm run test",
+		"coverage": "c8 npm run test",
 		"publish": "npm run lint && npm run test && lerna publish --no-private"
 	},
 	"devDependencies": {
