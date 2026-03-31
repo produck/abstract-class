@@ -118,8 +118,8 @@ export const Method: () => MethodMember;
  * @param parser - The parser to apply to the resolved value.
  * @returns A parser that validates a `Promise` member.
  */
-export function Promise<P extends Parser>(
-	parser: P,
+export function Promise<P extends Parser = typeof Any>(
+	parser?: P,
 ): Parser<globalThis.Promise<ReturnType<P>>>;
 
 /**
@@ -128,8 +128,8 @@ export function Promise<P extends Parser>(
  * @param parser - The parser to apply to the value.
  * @returns A parser that accepts either a `Promise` or a direct value.
  */
-export function OrPromise<P extends Parser>(
-	parser: P,
+export function OrPromise<P extends Parser = typeof Any>(
+	parser?: P,
 ): Parser<ReturnType<P> | globalThis.Promise<ReturnType<P>>>;
 
 /**
@@ -139,8 +139,8 @@ export function OrPromise<P extends Parser>(
  * @param parser - The parser to apply to the resolved value.
  * @returns A parser that validates a thenable member.
  */
-export function PromiseLike<P extends Parser>(
-	parser: P,
+export function PromiseLike<P extends Parser = typeof Any>(
+	parser?: P,
 ): Parser<globalThis.PromiseLike<ReturnType<P>>>;
 
 /**
@@ -149,6 +149,6 @@ export function PromiseLike<P extends Parser>(
  * @param parser - The parser to apply to the value.
  * @returns A parser that accepts either a thenable or a direct value.
  */
-export function OrPromiseLike<P extends Parser>(
-	parser: P,
+export function OrPromiseLike<P extends Parser = typeof Any>(
+	parser?: P,
 ): Parser<ReturnType<P> | globalThis.PromiseLike<ReturnType<P>>>;

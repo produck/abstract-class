@@ -1,3 +1,4 @@
+import { Any } from '@produck/es-abstract-token';
 import { ThrowTypeError } from '@produck/type-error';
 
 function isPromiseLike(value) {
@@ -10,7 +11,7 @@ function assertParser(parser) {
 	}
 }
 
-function PromiseParser(parser) {
+function PromiseParser(parser = Any) {
 	assertParser(parser);
 
 	return function parsePromise(value) {
@@ -22,7 +23,7 @@ function PromiseParser(parser) {
 	};
 }
 
-export function OrPromise(parser) {
+export function OrPromise(parser = Any) {
 	assertParser(parser);
 
 	return function parseOrPromise(value) {
@@ -34,7 +35,7 @@ export function OrPromise(parser) {
 	};
 }
 
-export function PromiseLike(parser) {
+export function PromiseLike(parser = Any) {
 	assertParser(parser);
 
 	return function parsePromiseLike(value) {
@@ -46,7 +47,7 @@ export function PromiseLike(parser) {
 	};
 }
 
-export function OrPromiseLike(parser) {
+export function OrPromiseLike(parser = Any) {
 	assertParser(parser);
 
 	return function parseOrPromiseLike(value) {

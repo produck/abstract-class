@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 
 import * as _ from '../src/index.mjs';
 
-const BAD_PARSERS = [null, undefined, 1, 'bad', true, {}, []];
+const BAD_PARSERS = [null, 1, 'bad', true, {}, []];
 const identity = v => v;
 
 for (const { name, factory } of [
@@ -24,6 +24,10 @@ for (const { name, factory } of [
 
 		it('should return a function.', () => {
 			assert.equal(typeof factory(identity), 'function');
+		});
+
+		it('should default parser to Any.', () => {
+			assert.equal(typeof factory(), 'function');
 		});
 	});
 }
