@@ -36,7 +36,7 @@
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-member",
   "peerDependencies": {
-    "@produck/es-abstract-token": "^0.2.2"
+    "@produck/es-abstract-token": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"
