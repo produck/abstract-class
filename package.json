@@ -34,6 +34,7 @@
     "packages/abstract",
     "packages/abstract-token",
     "packages/abstract-member",
+    "packages/abstract-member-constructor",
     "packages/abstract-member-zod",
     "example"
   ]

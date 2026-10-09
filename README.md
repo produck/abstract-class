@@ -8,6 +8,8 @@ ECMAScript abstract class generator, maintained as a monorepo.
   groups describing the members a subclass has to implement.
 - `@produck/es-abstract-member` — ready-made parsers for declaring those
   members.
+- `@produck/es-abstract-member-constructor` — parsers for constructor-shaped
+  members.
 - `@produck/es-abstract-member-zod` — member parsers built from zod schemas.
 - `@produck/es-abstract` — convenience entry re-exporting the toolkit.
 
@@ -21,6 +23,7 @@ graph LR
   A --> C["@produck/es-abstract-member"]
   C --> B
   D["@produck/es-abstract-member-zod"]
+  F["@produck/es-abstract-member-constructor"] --> B
   E["example (private)"] --> A
   E --> D
 ```
