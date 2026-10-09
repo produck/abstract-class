@@ -131,3 +131,8 @@ dist
 
 .vscode
 *.ign*
+
+# produck:org-baseline
+*.gen*
+publish-assets/
+!.github/

@@ -1,45 +1,46 @@
 {
-	"name": "@produck/es-abstract-token",
-	"version": "0.2.2",
-	"description": "",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/produck/abstract-class.git",
-		"directory": "packages/abstract-token"
-	},
-	"homepage": "https://github.com/produck/abstract-class#readme",
-	"bugs": {
-		"url": "https://github.com/produck/abstract-class/issues"
-	},
-	"license": "MIT",
-	"author": "ChaosLee",
-	"publishConfig": {
-		"access": "public"
-	},
-	"type": "module",
-	"main": "src/index.mjs",
-	"types": "index.d.ts",
-	"exports": {
-		".": {
-			"types": "./index.d.ts",
-			"import": "./src/index.mjs"
-		},
-		"./erase": {
-			"types": "./index.d.ts",
-			"import": "./src/Erase/index.mjs"
-		}
-	},
-	"files": [
-		"src",
-		"index.d.ts"
-	],
-	"scripts": {
-		"test": "node ./test/index.mjs",
-		"test:only": "node --test-only ./test/index.mjs"
-	},
-	"dependencies": {
-		"@produck/is-constructor": "^1.0.1",
-		"@produck/ow": "^0.2.3",
-		"@produck/type-error": "^0.1.5"
-	}
+  "author": "ChaosLee",
+  "bugs": {
+    "url": "https://github.com/produck/abstract-class/issues"
+  },
+  "dependencies": {
+    "@produck/is-constructor": "^1.0.1",
+    "@produck/ow": "^0.2.3",
+    "@produck/type-error": "^0.1.5"
+  },
+  "description": "",
+  "exports": {
+    ".": {
+      "import": "./src/index.mjs",
+      "types": "./index.d.ts"
+    },
+    "./erase": {
+      "import": "./src/Erase/index.mjs",
+      "types": "./index.d.ts"
+    }
+  },
+  "files": [
+    "src",
+    "index.d.ts"
+  ],
+  "homepage": "https://github.com/produck/abstract-class#readme",
+  "license": "MIT",
+  "main": "src/index.mjs",
+  "name": "@produck/es-abstract-token",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "directory": "packages/abstract-token",
+    "type": "git",
+    "url": "git+https://github.com/produck/abstract-class.git"
+  },
+  "scripts": {
+    "produck:coverage": "c8 --reporter=lcov --reporter=html --reporter=text-summary npm test",
+    "test": "node ./test/index.mjs",
+    "test:only": "node --test-only ./test/index.mjs"
+  },
+  "type": "module",
+  "types": "index.d.ts",
+  "version": "0.2.2"
 }

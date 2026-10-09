@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-
 import { ConstructorLike, Parser, Any } from '@produck/es-abstract-token';
 
 /**
@@ -9,7 +7,7 @@ import { ConstructorLike, Parser, Any } from '@produck/es-abstract-token';
  * @returns A parser that validates the value is an instance of the constructor.
  */
 export function Instance<C extends ConstructorLike = ObjectConstructor>(
-	constructor: C,
+  constructor: C,
 ): Parser<InstanceType<C>>;
 
 /** Asserts value is `undefined`. */
@@ -43,7 +41,7 @@ export { Any, Any as Unknown };
  * Extracts the return types from a tuple of parsers.
  */
 type ExtractReturnTypes<T extends readonly Parser[]> = {
-	[K in keyof T]: T[K] extends Parser<infer R> ? R : never;
+  [K in keyof T]: T[K] extends Parser<infer R> ? R : never;
 };
 
 /**
@@ -57,52 +55,52 @@ type ExtractReturnTypes<T extends readonly Parser[]> = {
  * @typeParam TRet - The parsed return type.
  */
 type MethodMember<
-	HArg extends boolean = true,
-	HRes extends boolean = true,
-	HRet extends boolean = true,
-	TArg extends readonly unknown[] = [],
-	TRes = unknown,
-	TRet = unknown,
+  HArg extends boolean = true,
+  HRes extends boolean = true,
+  HRet extends boolean = true,
+  TArg extends readonly unknown[] = [],
+  TRes = unknown,
+  TRet = unknown,
 > = Parser<(..._: [...TArg, ...TRes[]]) => TRet> &
-	(HArg extends true
-		? {
-				/**
-				 * Defines parsers for positional arguments.
-				 *
-				 * @param parsers - A parser for each positional argument.
-				 * @returns The method member for chaining.
-				 */
-				args<PT extends readonly Parser[]>(
-					...parsers: PT
-				): MethodMember<false, HRes, HRet, ExtractReturnTypes<PT>, TRes, TRet>;
-			}
-		: {}) &
-	(HRes extends true
-		? {
-				/**
-				 * Defines a parser for rest (extra) arguments.
-				 *
-				 * @param parser - The parser applied to each rest argument.
-				 * @returns The method member for chaining.
-				 */
-				rest<P extends Parser>(
-					parser: P,
-				): MethodMember<HArg, false, HRet, TArg, ReturnType<P>, TRet>;
-			}
-		: {}) &
-	(HRet extends true
-		? {
-				/**
-				 * Defines a parser for the return value.
-				 *
-				 * @param parser - The parser applied to the return value.
-				 * @returns The method member for chaining.
-				 */
-				returns<P extends Parser>(
-					parser: P,
-				): MethodMember<HArg, HRes, false, TArg, TRes, ReturnType<P>>;
-			}
-		: {});
+  (HArg extends true
+    ? {
+        /**
+         * Defines parsers for positional arguments.
+         *
+         * @param parsers - A parser for each positional argument.
+         * @returns The method member for chaining.
+         */
+        args<PT extends readonly Parser[]>(
+          ...parsers: PT
+        ): MethodMember<false, HRes, HRet, ExtractReturnTypes<PT>, TRes, TRet>;
+      }
+    : unknown) &
+  (HRes extends true
+    ? {
+        /**
+         * Defines a parser for rest (extra) arguments.
+         *
+         * @param parser - The parser applied to each rest argument.
+         * @returns The method member for chaining.
+         */
+        rest<P extends Parser>(
+          parser: P,
+        ): MethodMember<HArg, false, HRet, TArg, ReturnType<P>, TRet>;
+      }
+    : unknown) &
+  (HRet extends true
+    ? {
+        /**
+         * Defines a parser for the return value.
+         *
+         * @param parser - The parser applied to the return value.
+         * @returns The method member for chaining.
+         */
+        returns<P extends Parser>(
+          parser: P,
+        ): MethodMember<HArg, HRes, false, TArg, TRes, ReturnType<P>>;
+      }
+    : unknown);
 
 /**
  * Creates a method member with chainable `.args()`, `.rest()`, `.returns()`
@@ -119,7 +117,7 @@ export const Method: () => MethodMember;
  * @returns A parser that validates a `Promise` member.
  */
 export function Promise<P extends Parser = typeof Any>(
-	parser?: P,
+  parser?: P,
 ): Parser<globalThis.Promise<ReturnType<P>>>;
 
 /**
@@ -129,7 +127,7 @@ export function Promise<P extends Parser = typeof Any>(
  * @returns A parser that accepts either a `Promise` or a direct value.
  */
 export function OrPromise<P extends Parser = typeof Any>(
-	parser?: P,
+  parser?: P,
 ): Parser<ReturnType<P> | globalThis.Promise<ReturnType<P>>>;
 
 /**
@@ -140,7 +138,7 @@ export function OrPromise<P extends Parser = typeof Any>(
  * @returns A parser that validates a thenable member.
  */
 export function PromiseLike<P extends Parser = typeof Any>(
-	parser?: P,
+  parser?: P,
 ): Parser<globalThis.PromiseLike<ReturnType<P>>>;
 
 /**
@@ -150,5 +148,5 @@ export function PromiseLike<P extends Parser = typeof Any>(
  * @returns A parser that accepts either a thenable or a direct value.
  */
 export function OrPromiseLike<P extends Parser = typeof Any>(
-	parser?: P,
+  parser?: P,
 ): Parser<ReturnType<P> | globalThis.PromiseLike<ReturnType<P>>>;

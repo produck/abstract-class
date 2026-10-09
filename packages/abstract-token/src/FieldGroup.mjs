@@ -6,69 +6,69 @@ import * as Member from './Member.mjs';
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
 export function isFieldGroup(value) {
-	if (typeof value !== 'object' || value === null) {
-		return false;
-	}
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
 
-	return FIELD_GROUP_TAG in value;
+  return FIELD_GROUP_TAG in value;
 }
 
 const PROPERTY_EXPECTED = Member.PROPERTY_TYPE_LIST.join(' | ');
 
 export function FieldGroupProvider(symbol) {
-	function assertMember(member, role) {
-		if (typeof member !== 'function') {
-			ThrowTypeError(role, 'function');
-		}
-	}
+  function assertMember(member, role) {
+    if (typeof member !== 'function') {
+      ThrowTypeError(role, 'function');
+    }
+  }
 
-	const By = {
-		NamedMember(property, member = Member.Any) {
-			if (!Member.isProperty(property)) {
-				ThrowTypeError('args[0] as property', PROPERTY_EXPECTED);
-			}
+  const By = {
+    NamedMember(property, member = Member.Any) {
+      if (!Member.isProperty(property)) {
+        ThrowTypeError('args[0] as property', PROPERTY_EXPECTED);
+      }
 
-			assertMember(member, 'args[1]');
+      assertMember(member, 'args[1]');
 
-			return Object.freeze({
-				[symbol]: Object.freeze({ [property]: member }),
-			});
-		},
-		MemberRecord(memberRecord) {
-			const record = {};
+      return Object.freeze({
+        [symbol]: Object.freeze({ [property]: member }),
+      });
+    },
+    MemberRecord(memberRecord) {
+      const record = {};
 
-			for (const property of [
-				...Object.getOwnPropertyNames(memberRecord),
-				...Object.getOwnPropertySymbols(memberRecord),
-			]) {
-				const member = memberRecord[property];
+      for (const property of [
+        ...Object.getOwnPropertyNames(memberRecord),
+        ...Object.getOwnPropertySymbols(memberRecord),
+      ]) {
+        const member = memberRecord[property];
 
-				assertMember(member, `args[0]['${String(property)}']`);
-				record[property] = member;
-			}
+        assertMember(member, `args[0]['${String(property)}']`);
+        record[property] = member;
+      }
 
-			return Object.freeze({ [symbol]: Object.freeze(record) });
-		},
-	};
+      return Object.freeze({ [symbol]: Object.freeze(record) });
+    },
+  };
 
-	return Object.freeze(function AbstractFieldGroup(...operands) {
-		if (operands.length < 1) {
-			Ow.Error.Syntax('At least 1 operand is required.');
-		}
+  return Object.freeze(function AbstractFieldGroup(...operands) {
+    if (operands.length < 1) {
+      Ow.Error.Syntax('At least 1 operand is required.');
+    }
 
-		if (operands.length > 2) {
-			Ow.Error.Syntax('The number of operands cannot exceed 2.');
-		}
+    if (operands.length > 2) {
+      Ow.Error.Syntax('The number of operands cannot exceed 2.');
+    }
 
-		const [first] = operands;
+    const [first] = operands;
 
-		return Object.freeze({
-			[FIELD_GROUP_TAG]: true,
-			...typeof first === 'object' && first !== null && operands.length === 1
-				? By.MemberRecord(...operands)
-				: By.NamedMember(...operands),
-		});
-	});
+    return Object.freeze({
+      [FIELD_GROUP_TAG]: true,
+      ...(typeof first === 'object' && first !== null && operands.length === 1
+        ? By.MemberRecord(...operands)
+        : By.NamedMember(...operands)),
+    });
+  });
 }
 
 export { FieldGroupProvider as Provider };

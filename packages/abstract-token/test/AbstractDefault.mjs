@@ -6,355 +6,388 @@ import Abstract, { Any } from '../src/index.mjs';
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
 const BAD_PROPERTY_LIST = [
-	true, null, undefined, BigInt(1),
-	[], {}, new Date(), () => {},
+  true,
+  null,
+  undefined,
+  BigInt(1),
+  [],
+  {},
+  new Date(),
+  () => {},
 ];
 
-const BAD_MEMBER_LIST = [
-	true, null, BigInt(1),
-	[], {}, new Date(),
-];
+const BAD_MEMBER_LIST = [true, null, BigInt(1), [], {}, new Date()];
 
 describe('::AbstractToken', () => {
-	class Mock {};
+  class Mock {}
 
-	describe('()', () => {
-		it('should throw if operands length <1', () => {
-			assert.throws(() => Abstract(), {
-				name: 'SyntaxError',
-				message: 'At least 1 operand is required.',
-			});
-		});
-	});
+  describe('()', () => {
+    it('should throw if operands length <1', () => {
+      assert.throws(() => Abstract(), {
+        name: 'SyntaxError',
+        message: 'At least 1 operand is required.',
+      });
+    });
+  });
 
-	describe('~AbstractInstanceFieldGroup()', () => {
-		// InstanceFieldGroup
+  describe('~AbstractInstanceFieldGroup()', () => {
+    // InstanceFieldGroup
 
-		it('should throw if operands number >2.', () => {
-			assert.throws(() => Abstract(0, 0, 0), {
-				name: 'SyntaxError',
-				message: 'The number of operands cannot exceed 2.',
-			});
-		});
+    it('should throw if operands number >2.', () => {
+      assert.throws(() => Abstract(0, 0, 0), {
+        name: 'SyntaxError',
+        message: 'The number of operands cannot exceed 2.',
+      });
+    });
 
-		describe('(memberRecord)', () => {
-			it('should throw if bad member record.', () => {
-				for (const badMember of BAD_MEMBER_LIST) {
-					assert.throws(() => Abstract({
-						foo: badMember,
-					}), {
-						name: 'TypeError',
-						message: 'Invalid "args[0][\'foo\']", one "function" expected.',
-					});
-				}
+    describe('(memberRecord)', () => {
+      it('should throw if bad member record.', () => {
+        for (const badMember of BAD_MEMBER_LIST) {
+          assert.throws(
+            () =>
+              Abstract({
+                foo: badMember,
+              }),
+            {
+              name: 'TypeError',
+              message: 'Invalid "args[0][\'foo\']", one "function" expected.',
+            },
+          );
+        }
 
-				for (const badMember of BAD_MEMBER_LIST) {
-					assert.throws(() => Abstract({
-						[Symbol('bar')]: badMember,
-					}), {
-						name: 'TypeError',
-						message: 'Invalid "args[0][\'Symbol(bar)\']", one "function" expected.',
-					});
-				}
-			});
+        for (const badMember of BAD_MEMBER_LIST) {
+          assert.throws(
+            () =>
+              Abstract({
+                [Symbol('bar')]: badMember,
+              }),
+            {
+              name: 'TypeError',
+              message:
+                'Invalid "args[0][\'Symbol(bar)\']", one "function" expected.',
+            },
+          );
+        }
+      });
 
-			it('should return a FieldGroup.', () => {
-				const group = Abstract({ foo: Any });
+      it('should return a FieldGroup.', () => {
+        const group = Abstract({ foo: Any });
 
-				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
-			});
-		});
+        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+      });
+    });
 
-		describe('(property, member)', () => {
-			it('should throw if bad property.', () => {
-				for (const badProperty of BAD_PROPERTY_LIST) {
-					if (typeof badProperty === 'function') {
-						continue;
-					}
+    describe('(property, member)', () => {
+      it('should throw if bad property.', () => {
+        for (const badProperty of BAD_PROPERTY_LIST) {
+          if (typeof badProperty === 'function') {
+            continue;
+          }
 
-					assert.throws(() => Abstract(badProperty, Any), {
-						name: 'TypeError',
-						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
-					});
-				}
-			});
+          assert.throws(() => Abstract(badProperty, Any), {
+            name: 'TypeError',
+            message:
+              'Invalid "args[0] as property", one "number | string | symbol" expected.',
+          });
+        }
+      });
 
-			it('should throw if bad member.', () => {
-				for (const badMember of BAD_MEMBER_LIST) {
-					assert.throws(() => Abstract('foo', badMember), {
-						name: 'TypeError',
-						message: 'Invalid "args[1]", one "function" expected.',
-					});
-				}
-			});
+      it('should throw if bad member.', () => {
+        for (const badMember of BAD_MEMBER_LIST) {
+          assert.throws(() => Abstract('foo', badMember), {
+            name: 'TypeError',
+            message: 'Invalid "args[1]", one "function" expected.',
+          });
+        }
+      });
 
-			it('should return a FieldGroup.', () => {
-				const group = Abstract('foo', Any);
+      it('should return a FieldGroup.', () => {
+        const group = Abstract('foo', Any);
 
-				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
-			});
-		});
-	});
+        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+      });
+    });
+  });
 
-	describe('.Static()~AbstractStaticFieldGroup()', () => {
-		// StaticFieldGroup
+  describe('.Static()~AbstractStaticFieldGroup()', () => {
+    // StaticFieldGroup
 
-		it('should throw if no operand.', () => {
-			assert.throws(() => Abstract.Static(), {
-				name: 'SyntaxError',
-				message: 'At least 1 operand is required.',
-			});
-		});
+    it('should throw if no operand.', () => {
+      assert.throws(() => Abstract.Static(), {
+        name: 'SyntaxError',
+        message: 'At least 1 operand is required.',
+      });
+    });
 
-		it('should throw if operands number >2.', () => {
-			assert.throws(() => Abstract.Static(0, 0, 0), {
-				name: 'SyntaxError',
-				message: 'The number of operands cannot exceed 2.',
-			});
-		});
+    it('should throw if operands number >2.', () => {
+      assert.throws(() => Abstract.Static(0, 0, 0), {
+        name: 'SyntaxError',
+        message: 'The number of operands cannot exceed 2.',
+      });
+    });
 
-		describe('(memberRecord)', () => {
-			it('should throw if bad member record.', () => {
-				for (const badMember of BAD_MEMBER_LIST) {
-					assert.throws(() => Abstract.Static({
-						foo: badMember,
-					}), {
-						name: 'TypeError',
-						message: 'Invalid "args[0][\'foo\']", one "function" expected.',
-					});
-				}
+    describe('(memberRecord)', () => {
+      it('should throw if bad member record.', () => {
+        for (const badMember of BAD_MEMBER_LIST) {
+          assert.throws(
+            () =>
+              Abstract.Static({
+                foo: badMember,
+              }),
+            {
+              name: 'TypeError',
+              message: 'Invalid "args[0][\'foo\']", one "function" expected.',
+            },
+          );
+        }
 
-				for (const badMember of BAD_MEMBER_LIST) {
-					assert.throws(() => Abstract.Static({
-						[Symbol('bar')]: badMember,
-					}), {
-						name: 'TypeError',
-						message: 'Invalid "args[0][\'Symbol(bar)\']", one "function" expected.',
-					});
-				}
-			});
+        for (const badMember of BAD_MEMBER_LIST) {
+          assert.throws(
+            () =>
+              Abstract.Static({
+                [Symbol('bar')]: badMember,
+              }),
+            {
+              name: 'TypeError',
+              message:
+                'Invalid "args[0][\'Symbol(bar)\']", one "function" expected.',
+            },
+          );
+        }
+      });
 
-			it('should return a FieldGroup.', () => {
-				const group = Abstract.Static({ foo: Any });
+      it('should return a FieldGroup.', () => {
+        const group = Abstract.Static({ foo: Any });
 
-				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
-			});
-		});
+        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+      });
+    });
 
-		describe('(property, member)', () => {
-			it('should throw if bad property.', () => {
-				for (const badProperty of BAD_PROPERTY_LIST) {
-					assert.throws(() => Abstract.Static(badProperty, Any), {
-						name: 'TypeError',
-						message: 'Invalid "args[0] as property", one "number | string | symbol" expected.',
-					});
-				}
-			});
+    describe('(property, member)', () => {
+      it('should throw if bad property.', () => {
+        for (const badProperty of BAD_PROPERTY_LIST) {
+          assert.throws(() => Abstract.Static(badProperty, Any), {
+            name: 'TypeError',
+            message:
+              'Invalid "args[0] as property", one "number | string | symbol" expected.',
+          });
+        }
+      });
 
-			it('should throw if bad member.', () => {
-				for (const badMember of BAD_MEMBER_LIST) {
-					assert.throws(() => Abstract.Static('foo', badMember), {
-						name: 'TypeError',
-						message: 'Invalid "args[1]", one "function" expected.',
-					});
-				}
-			});
+      it('should throw if bad member.', () => {
+        for (const badMember of BAD_MEMBER_LIST) {
+          assert.throws(() => Abstract.Static('foo', badMember), {
+            name: 'TypeError',
+            message: 'Invalid "args[1]", one "function" expected.',
+          });
+        }
+      });
 
-			it('should return a FieldGroup.', () => {
-				const group = Abstract.Static('foo', Any);
+      it('should return a FieldGroup.', () => {
+        const group = Abstract.Static('foo', Any);
 
-				assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
-			});
-		});
-	});
+        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+      });
+    });
+  });
 
-	describe('.static', () => {
-		it('should be same to ".Static".', () => {
-			assert.equal(Abstract.Static, Abstract.static);
-		});
-	});
+  describe('.static', () => {
+    it('should be same to ".Static".', () => {
+      assert.equal(Abstract.Static, Abstract.static);
+    });
+  });
 
-	describe('~AbstractConstructor()', () => {
-		it('should throw if unconstructible function.', () => {
-			assert.throws(() => Abstract(() => {}), {
-				name: 'TypeError',
-				message: 'Invalid "args[0]", one "constructible" expected.',
-			});
-		});
+  describe('~AbstractConstructor()', () => {
+    it('should throw if unconstructible function.', () => {
+      assert.throws(() => Abstract(() => {}), {
+        name: 'TypeError',
+        message: 'Invalid "args[0]", one "constructible" expected.',
+      });
+    });
 
-		it('should throw if bad field group.', () => {
-			for (const badValue of [
-				1, true, null, Symbol(), 'bad',
-			]) {
-				assert.throws(() => Abstract(Mock, badValue), {
-					name: 'TypeError',
-					message: 'Invalid "args[1]", one "FieldGroup" expected.',
-				});
-			}
-		});
+    it('should throw if bad field group.', () => {
+      for (const badValue of [1, true, null, Symbol(), 'bad']) {
+        assert.throws(() => Abstract(Mock, badValue), {
+          name: 'TypeError',
+          message: 'Invalid "args[1]", one "FieldGroup" expected.',
+        });
+      }
+    });
 
-		it('should define an abstract class without field groups.', () => {
-			Abstract(Mock);
-		});
+    it('should define an abstract class without field groups.', () => {
+      Abstract(Mock);
+    });
 
-		it('should define an abstract class with field groups.', () => {
-			Abstract(Mock, ...[
-				Abstract({
-					foo: Any,
-				}),
-			]);
-		});
+    it('should define an abstract class with field groups.', () => {
+      Abstract(
+        Mock,
+        ...[
+          Abstract({
+            foo: Any,
+          }),
+        ],
+      );
+    });
 
-		describe('>ConstructorProxy', () => {
-			it('should throw if new abstract constructor.', () => {
-				assert.throws(() => {
-					const AbstractMock = Abstract(Mock);
+    describe('>ConstructorProxy', () => {
+      it('should throw if new abstract constructor.', () => {
+        assert.throws(
+          () => {
+            const AbstractMock = Abstract(Mock);
 
-					new AbstractMock();
-				}, {
-					name: 'Error',
-					message: 'Illegal construction on an abstract constructor.',
-				});
-			});
+            new AbstractMock();
+          },
+          {
+            name: 'Error',
+            message: 'Illegal construction on an abstract constructor.',
+          },
+        );
+      });
 
-			it('should new an instance from sub class.', () => {
-				const AbstractMock = Abstract(Mock);
+      it('should new an instance from sub class.', () => {
+        const AbstractMock = Abstract(Mock);
 
-				class SubMock extends AbstractMock {};
+        class SubMock extends AbstractMock {}
 
-				const mock = new SubMock();
+        const mock = new SubMock();
 
-				assert.ok(mock instanceof SubMock);
-				assert.ok(mock instanceof AbstractMock);
-				assert.ok(mock instanceof Mock);
-			});
+        assert.ok(mock instanceof SubMock);
+        assert.ok(mock instanceof AbstractMock);
+        assert.ok(mock instanceof Mock);
+      });
 
-			describe('<AbstractMember>', () => {
-				const AbstractMock = Abstract(class extends WeakMap {
-					foo() {
-						return 'AbstractMockFoo';
-					}
+      describe('<AbstractMember>', () => {
+        const AbstractMock = Abstract(
+          class extends WeakMap {
+            foo() {
+              return 'AbstractMockFoo';
+            }
 
-					getName() {
-						return `is${this.name}`;
-					}
+            getName() {
+              return `is${this.name}`;
+            }
 
-					static Baz() {
-						return 'AbstractMockStaticBaz';
-					}
-				}, ...[
-					Abstract.Static({
-						Foo: Any,
-						Bar: Any,
-					}),
-					Abstract({
-						name: Any,
-						bar: Any,
-					}),
-				]);
+            static Baz() {
+              return 'AbstractMockStaticBaz';
+            }
+          },
+          ...[
+            Abstract.Static({
+              Foo: Any,
+              Bar: Any,
+            }),
+            Abstract({
+              name: Any,
+              bar: Any,
+            }),
+          ],
+        );
 
-				const AbstractSubMock = Abstract(class extends AbstractMock {
+        const AbstractSubMock = Abstract(
+          class extends AbstractMock {
+            static Foo() {
+              return 'AbstractSubMockStaticFoo';
+            }
+          },
+          ...[],
+        );
 
-					static Foo() {
-						return 'AbstractSubMockStaticFoo';
-					}
-				}, ...[
+        class LooseSubMock extends AbstractSubMock {}
 
-				]);
+        class FullSubMock extends AbstractSubMock {
+          name = 'full';
 
-				class LooseSubMock extends AbstractSubMock {
+          bar() {
+            return 'FullSubMockBar';
+          }
 
-				}
+          static Foo() {
+            return 'FullSubMockStaticFoo';
+          }
 
-				class FullSubMock extends AbstractSubMock {
-					name = 'full';
+          static Bar() {
+            return 'FullSubMockStaticBar';
+          }
+        }
 
-					bar() {
-						return 'FullSubMockBar';
-					}
+        describe('<Instance>', () => {
+          it('should throw if not implemented.', () => {
+            const loose = new LooseSubMock();
 
-					static Foo() {
-						return 'FullSubMockStaticFoo';
-					}
+            assert.throws(() => loose.bar, {
+              name: 'Error',
+              message:
+                'Instance member "bar" must be implemented in the subclass.',
+            });
+          });
 
-					static Bar() {
-						return 'FullSubMockStaticBar';
-					}
-				}
+          it('should call FullSubMock.bar()', () => {
+            const full = new FullSubMock();
 
-				describe('<Instance>', () => {
-					it('should throw if not implemented.', () => {
-						const loose = new LooseSubMock();
+            assert.equal(full.bar(), 'FullSubMockBar');
+          });
 
-						assert.throws(() => loose.bar, {
-							name: 'Error',
-							message: 'Instance member "bar" must be implemented in the subclass.',
-						});
-					});
+          it('should throw if no `.name`.', () => {
+            const loose = new LooseSubMock();
 
-					it('should call FullSubMock.bar()', () => {
-						const full = new FullSubMock();
+            assert.throws(() => loose.getName(), {
+              name: 'Error',
+              message:
+                'Instance member "name" must be implemented in the subclass.',
+            });
+          });
 
-						assert.equal(full.bar(), 'FullSubMockBar');
-					});
+          it('should call .getName() by instance `.name` implementing.', () => {
+            const loose = new LooseSubMock();
 
-					it('should throw if no `.name`.', () => {
-						const loose = new LooseSubMock();
+            loose.name = 'qux';
+            assert.equal(loose.getName(), 'isqux');
+          });
 
-						assert.throws(() => loose.getName(), {
-							name: 'Error',
-							message: 'Instance member "name" must be implemented in the subclass.',
-						});
-					});
+          it('should access target when parse.', () => {
+            const nonce = Math.trunc(Math.random() * 1000);
+            let flag = false;
 
-					it('should call .getName() by instance `.name` implementing.', () => {
-						const loose = new LooseSubMock();
+            const AbstractMock = Abstract(
+              class Mock {
+                nonce = nonce;
+              },
+              ...[
+                Abstract({
+                  foo: (value, target) => {
+                    assert.equal(target, mock);
+                    flag = true;
 
-						loose.name = 'qux';
-						assert.equal(loose.getName(), 'isqux');
-					});
+                    return value;
+                  },
+                }),
+              ],
+            );
 
-					it('should access target when parse.', () => {
-						const nonce = Math.trunc(Math.random() * 1000);
-						let flag = false;
+            class SubMock extends AbstractMock {}
 
-						const AbstractMock = Abstract(class Mock {
-							nonce = nonce;
-						}, ...[
-							Abstract({
-								foo: (value, target) => {
-									assert.equal(target, mock);
-									flag = true;
+            const mock = new SubMock();
 
-									return value;
-								},
-							}),
-						]);
+            mock.foo = nonce;
+            assert.equal(mock.foo, nonce);
+            assert.ok(flag);
+          });
+        });
 
-						class SubMock extends AbstractMock {}
+        describe('<Static>', () => {
+          it('should throw if not implemented.', () => {
+            assert.throws(() => LooseSubMock.Bar, {
+              name: 'Error',
+              message:
+                'Static member "Bar" must be implemented in the subclass.',
+            });
+          });
 
-						const mock = new SubMock();
-
-						mock.foo = nonce;
-						assert.equal(mock.foo, nonce);
-						assert.ok(flag);
-					});
-				});
-
-				describe('<Static>', () => {
-					it('should throw if not implemented.', () => {
-						assert.throws(() => LooseSubMock.Bar, {
-							name: 'Error',
-							message: 'Static member "Bar" must be implemented in the subclass.',
-						});
-					});
-
-					it('should call AbstractSubMock.Foo()', () => {
-						assert.equal(AbstractSubMock.Foo(), 'AbstractSubMockStaticFoo');
-					});
-				});
-			});
-
-		});
-	});
+          it('should call AbstractSubMock.Foo()', () => {
+            assert.equal(AbstractSubMock.Foo(), 'AbstractSubMockStaticFoo');
+          });
+        });
+      });
+    });
+  });
 });

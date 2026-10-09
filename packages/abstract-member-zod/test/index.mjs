@@ -4,36 +4,36 @@ import * as zod from 'zod';
 import * as _ from '../src/index.mjs';
 
 const mock = zod.object({
-	foo: zod.boolean(),
-	bar: zod.string(),
-	baz: zod.int(),
+  foo: zod.boolean(),
+  bar: zod.string(),
+  baz: zod.int(),
 });
 
 describe('::Zod', () => {
-	it('should throw if bad zod type.', () => {
-		for (const sample of [null, 1, {}, [], new Date(), () => {}, true, 'foo']) {
-			assert.throws(() => _.Zod(sample), {
-				name: 'TypeError',
-				message: 'Invalid "args[0]", one "ZodType" expected.',
-			});
-		}
-	});
+  it('should throw if bad zod type.', () => {
+    for (const sample of [null, 1, {}, [], new Date(), () => {}, true, 'foo']) {
+      assert.throws(() => _.Zod(sample), {
+        name: 'TypeError',
+        message: 'Invalid "args[0]", one "ZodType" expected.',
+      });
+    }
+  });
 
-	it('should get a member.', () => {
-		assert.ok(typeof _.Zod(mock) === 'function');
-	});
+  it('should get a member.', () => {
+    assert.ok(typeof _.Zod(mock) === 'function');
+  });
 
-	describe('>()', () => {
-		it('should ok', () => {
-			const sample = {
-				foo: true,
-				bar: 'qux',
-				baz: 1,
-			};
+  describe('>()', () => {
+    it('should ok', () => {
+      const sample = {
+        foo: true,
+        bar: 'qux',
+        baz: 1,
+      };
 
-			assert.equal(_.Zod(mock)(sample), sample);
+      assert.equal(_.Zod(mock)(sample), sample);
 
-			assert.throws(() => _.Zod(mock)({}));
-		});
-	});
+      assert.throws(() => _.Zod(mock)({}));
+    });
+  });
 });

@@ -41,30 +41,30 @@ npm install @produck/es-abstract-token
 ## Quick Start
 
 ```js
-import Abstract, { Any } from "@produck/es-abstract-token";
+import Abstract, { Any } from '@produck/es-abstract-token';
 
 const AbstractSample = Abstract(
-	class Sample {
-		superMember = "foo";
-	},
-	...[
-		Abstract({
-			foo: Any,
-		}),
-		Abstract("bar"),
-		Abstract.Static({
-			baz: Any,
-		}),
-		Abstract.Static("qux"),
-	],
+  class Sample {
+    superMember = 'foo';
+  },
+  ...[
+    Abstract({
+      foo: Any,
+    }),
+    Abstract('bar'),
+    Abstract.Static({
+      baz: Any,
+    }),
+    Abstract.Static('qux'),
+  ],
 );
 
 // ❌ Error: Illegal construction on an abstract constructor.
 new AbstractSample();
 
 class Sample extends AbstractSample {
-	foo = "implemented";
-	static baz = "implemented";
+  foo = 'implemented';
+  static baz = 'implemented';
 }
 
 // ✔ Creating a new instance is OK.

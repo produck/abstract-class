@@ -9,87 +9,89 @@ const RESERVED_PROPERTY_LIST = ['prototype', 'constructor'];
 const EXTENDS_PROXY = Symbol();
 
 function ProxyHandler(members, fieldName) {
-	return {
-		get(target, property, receiver) {
-			const value = Reflect.get(target, property, receiver);
+  return {
+    get(target, property, receiver) {
+      const value = Reflect.get(target, property, receiver);
 
-			if (RESERVED_PROPERTY_LIST.includes(property)) {
-				return value;
-			}
+      if (RESERVED_PROPERTY_LIST.includes(property)) {
+        return value;
+      }
 
-			if (!Object.hasOwn(members, property)) {
-				return value;
-			}
+      if (!Object.hasOwn(members, property)) {
+        return value;
+      }
 
-			if (property in target) {
-				return members[property](value, receiver);
-			}
+      if (property in target) {
+        return members[property](value, receiver);
+      }
 
-			throw Ow.Error.Common(`${fieldName} member "${String(property)}" must be implemented in the subclass.`);
-		},
-	};
+      throw Ow.Error.Common(
+        `${fieldName} member "${String(property)}" must be implemented in the subclass.`,
+      );
+    },
+  };
 }
 
 function assertConstructor(value, role) {
-	if (!isConstructor(value)) {
-		ThrowTypeError(role, 'constructible');
-	}
+  if (!isConstructor(value)) {
+    ThrowTypeError(role, 'constructible');
+  }
 }
 
 export function SubConstructorProxy(subConstructor) {
-	assertConstructor(subConstructor, 'args[0]');
+  assertConstructor(subConstructor, 'args[0]');
 
-	const proxy = subConstructor[EXTENDS_PROXY];
+  const proxy = subConstructor[EXTENDS_PROXY];
 
-	if (proxy === undefined) {
-		Ow.Error.Common('This constructor is NOT extended from an abstract one.');
-	}
+  if (proxy === undefined) {
+    Ow.Error.Common('This constructor is NOT extended from an abstract one.');
+  }
 
-	return proxy;
+  return proxy;
 }
 
 export function AbstractConstructor(constructor, ...fieldGroupList) {
-	assertConstructor(constructor, 'args[0]');
+  assertConstructor(constructor, 'args[0]');
 
-	for (const [index, fieldGroup] of Object.entries(fieldGroupList)) {
-		if (!FieldGroup.isFieldGroup(fieldGroup)) {
-			ThrowTypeError(`args[${Number(index) + 1}]`, 'FieldGroup');
-		}
-	}
+  for (const [index, fieldGroup] of Object.entries(fieldGroupList)) {
+    if (!FieldGroup.isFieldGroup(fieldGroup)) {
+      ThrowTypeError(`args[${Number(index) + 1}]`, 'FieldGroup');
+    }
+  }
 
-	const Field = NamedFieldGroup.merge(fieldGroupList);
-	const instanceProxyHandler = ProxyHandler(Field.Instance, 'Instance');
-	const staticProxyHandler = ProxyHandler(Field.Static, 'Static');
-	const extendingProxySet = new WeakSet();
+  const Field = NamedFieldGroup.merge(fieldGroupList);
+  const instanceProxyHandler = ProxyHandler(Field.Instance, 'Instance');
+  const staticProxyHandler = ProxyHandler(Field.Static, 'Static');
+  const extendingProxySet = new WeakSet();
 
-	const ConstructorProxy = new Proxy(constructor, {
-		construct(target, argumentList, newTarget) {
-			if (newTarget === ConstructorProxy) {
-				Ow.Error.Common('Illegal construction on an abstract constructor.');
-			}
+  const ConstructorProxy = new Proxy(constructor, {
+    construct(target, argumentList, newTarget) {
+      if (newTarget === ConstructorProxy) {
+        Ow.Error.Common('Illegal construction on an abstract constructor.');
+      }
 
-			const instance = Reflect.construct(target, argumentList, newTarget);
+      const instance = Reflect.construct(target, argumentList, newTarget);
 
-			return new Proxy(instance, instanceProxyHandler);
-		},
-		get(...args) {
-			const [, property, receiver] = args;
+      return new Proxy(instance, instanceProxyHandler);
+    },
+    get(...args) {
+      const [, property, receiver] = args;
 
-			// For abstract static members.
-			if (property !== EXTENDS_PROXY) {
-				return staticProxyHandler.get(...args);
-			}
+      // For abstract static members.
+      if (property !== EXTENDS_PROXY) {
+        return staticProxyHandler.get(...args);
+      }
 
-			if (extendingProxySet.has(receiver)) {
-				Ow.Error.Common('Extending proxy has already been created');
-			}
+      if (extendingProxySet.has(receiver)) {
+        Ow.Error.Common('Extending proxy has already been created');
+      }
 
-			extendingProxySet.add(receiver);
+      extendingProxySet.add(receiver);
 
-			// Creating a sub constructor.
-			return new Proxy(receiver, staticProxyHandler);
-		},
-	});
+      // Creating a sub constructor.
+      return new Proxy(receiver, staticProxyHandler);
+    },
+  });
 
-	return ConstructorProxy;
+  return ConstructorProxy;
 }

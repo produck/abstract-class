@@ -4,29 +4,29 @@ import { describe, it } from 'node:test';
 import * as _ from '../src/index.mjs';
 
 describe('::Instance()', () => {
-	it('should throw if bad constructor.', () => {
-		for (const sample of [
-			() => {},
-			1,
-			async () => {},
-			async function() {},
-			function *() {},
-		]) {
-			assert.throws(() => _.Instance(sample), {
-				name: 'TypeError',
-				message: 'Invalid "args[0]", one "constructible" expected.',
-			});
-		}
-	});
+  it('should throw if bad constructor.', () => {
+    for (const sample of [
+      () => {},
+      1,
+      async () => {},
+      async function () {},
+      function* () {},
+    ]) {
+      assert.throws(() => _.Instance(sample), {
+        name: 'TypeError',
+        message: 'Invalid "args[0]", one "constructible" expected.',
+      });
+    }
+  });
 
-	it('should pass.', () => {
-		_.Instance(Date)(new Date());
-	});
+  it('should pass.', () => {
+    _.Instance(Date)(new Date());
+  });
 
-	it('should throw if instance-constructor not matched.', () => {
-		assert.throws(() => _.Instance(Date)([]), {
-			name: 'TypeError',
-			message: 'Invalid "member", one "Date" expected.',
-		});
-	});
+  it('should throw if instance-constructor not matched.', () => {
+    assert.throws(() => _.Instance(Date)([]), {
+      name: 'TypeError',
+      message: 'Invalid "member", one "Date" expected.',
+    });
+  });
 });

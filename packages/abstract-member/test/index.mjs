@@ -4,8 +4,8 @@ import { it } from 'node:test';
 import { Any, Unknown } from '../src/index.mjs';
 
 it('should export Any, Unknown', () => {
-	assert.ok(Any === Unknown);
-	assert.ok(typeof Any === 'function');
+  assert.ok(Any === Unknown);
+  assert.ok(typeof Any === 'function');
 });
 
 import './Primitive.spec.mjs';

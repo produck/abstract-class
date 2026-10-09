@@ -1,15 +1,19 @@
 {
-	"name": "@produck/es-abstract-example",
-	"version": "0.0.0",
-	"private": true,
-	"description": "",
-	"license": "MIT",
-	"author": "ChaosLee",
-	"type": "module",
-	"main": "index.mjs",
-	"devDependencies": {
-		"@produck/es-abstract": "*",
-		"@produck/es-abstract-member-zod": "*",
-		"zod": "^4.3.6"
-	}
+  "author": "ChaosLee",
+  "description": "",
+  "devDependencies": {
+    "@produck/es-abstract": "*",
+    "@produck/es-abstract-member-zod": "*",
+    "zod": "^4.3.6"
+  },
+  "license": "MIT",
+  "main": "index.mjs",
+  "name": "@produck/es-abstract-example",
+  "private": true,
+  "scripts": {
+    "produck:coverage": "c8 --reporter=lcov --reporter=html --reporter=text-summary npm test",
+    "test": "node -e \"console.log('No tests configured')\""
+  },
+  "type": "module",
+  "version": "0.0.0"
 }
