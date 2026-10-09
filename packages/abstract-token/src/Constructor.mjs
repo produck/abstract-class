@@ -1,6 +1,5 @@
+import { Ow, ThrowTypeError } from '@produck/argot';
 import { isConstructor } from '@produck/is-constructor';
-import * as Ow from '@produck/ow';
-import { ThrowTypeError } from '@produck/type-error';
 
 import * as FieldGroup from './FieldGroup.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';

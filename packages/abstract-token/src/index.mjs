@@ -1,4 +1,4 @@
-import * as Ow from '@produck/ow';
+import { Ow } from '@produck/argot';
 
 import { AbstractConstructor, SubConstructorProxy } from './Constructor.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';

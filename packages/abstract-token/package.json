@@ -4,11 +4,10 @@
     "url": "https://github.com/produck/abstract-class/issues"
   },
   "dependencies": {
-    "@produck/is-constructor": "^1.0.1",
-    "@produck/ow": "^0.2.3",
-    "@produck/type-error": "^0.1.5"
+    "@produck/argot": "^0.3.1",
+    "@produck/is-constructor": "^1.0.3"
   },
-  "description": "",
+  "description": "Abstract constructor (or class) generator for ECMAScript.",
   "exports": {
     ".": {
       "import": "./src/index.mjs",
@@ -23,7 +22,17 @@
     "src",
     "index.d.ts"
   ],
-  "homepage": "https://github.com/produck/abstract-class#readme",
+  "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract-token#readme",
+  "keywords": [
+    "abstract",
+    "abstract-class",
+    "class",
+    "constructor",
+    "ecmascript",
+    "javascript",
+    "mixin",
+    "runtime-check"
+  ],
   "license": "MIT",
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-token",

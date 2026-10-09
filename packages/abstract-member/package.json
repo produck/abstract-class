@@ -4,11 +4,11 @@
     "url": "https://github.com/produck/abstract-class/issues"
   },
   "dependencies": {
-    "@produck/is-constructor": "^1.0.1",
-    "@produck/ow": "^0.2.3",
-    "@produck/type-error": "^0.1.5"
+    "@produck/is-constructor": "^1.0.3",
+    "@produck/ow": "^0.2.6",
+    "@produck/type-error": "^0.1.8"
   },
-  "description": "",
+  "description": "Ready-made parsers for declaring the members of an abstract constructor.",
   "devDependencies": {
     "@produck/es-abstract-token": "^0.2.2"
   },
@@ -22,7 +22,16 @@
     "src",
     "index.d.ts"
   ],
-  "homepage": "https://github.com/produck/abstract-class#readme",
+  "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract-member#readme",
+  "keywords": [
+    "abstract",
+    "abstract-class",
+    "javascript",
+    "member",
+    "parser",
+    "runtime-check",
+    "validator"
+  ],
   "license": "MIT",
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-member",

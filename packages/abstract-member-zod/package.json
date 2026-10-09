@@ -6,7 +6,7 @@
   "dependencies": {
     "@produck/type-error": "^0.1.8"
   },
-  "description": "",
+  "description": "Zod-schema parsers for declaring the members of an abstract constructor.",
   "devDependencies": {
     "@produck/es-abstract-token": "^0.2.2",
     "zod": "^4.6.5"
@@ -21,7 +21,17 @@
     "src",
     "index.d.ts"
   ],
-  "homepage": "https://github.com/produck/abstract-class#readme",
+  "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract-member-zod#readme",
+  "keywords": [
+    "abstract",
+    "abstract-class",
+    "javascript",
+    "member",
+    "parser",
+    "schema",
+    "validation",
+    "zod"
+  ],
   "license": "MIT",
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-member-zod",

@@ -7,7 +7,7 @@
     "@produck/es-abstract-member": "^0.3.1",
     "@produck/es-abstract-token": "^0.2.2"
   },
-  "description": "Keyword \"abstract\" in ECMAScript",
+  "description": "Convenience entry re-exporting the abstract-class toolkit.",
   "exports": {
     ".": {
       "import": "./src/index.mjs",
@@ -18,14 +18,14 @@
     "src",
     "index.d.ts"
   ],
-  "homepage": "https://github.com/produck/abstract-class#readme",
+  "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract#readme",
   "keywords": [
-    "es",
     "abstract",
-    "lang",
-    "keyword",
-    "syntax",
-    "meta"
+    "abstract-class",
+    "ecmascript",
+    "javascript",
+    "mixin",
+    "toolkit"
   ],
   "license": "MIT",
   "main": "src/index.mjs",
