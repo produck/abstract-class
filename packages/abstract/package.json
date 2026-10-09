@@ -4,8 +4,8 @@
     "url": "https://github.com/produck/abstract-class/issues"
   },
   "dependencies": {
-    "@produck/es-abstract-member": "^0.3.1",
-    "@produck/es-abstract-token": "^0.2.2"
+    "@produck/es-abstract-member": "^0.3.2",
+    "@produck/es-abstract-token": "^0.3.0"
   },
   "description": "Convenience entry re-exporting the abstract-class toolkit.",
   "exports": {
@@ -44,5 +44,5 @@
   },
   "type": "module",
   "types": "index.d.ts",
-  "version": "0.3.3"
+  "version": "0.3.4"
 }

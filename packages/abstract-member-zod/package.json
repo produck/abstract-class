@@ -8,7 +8,7 @@
   },
   "description": "Zod-schema parsers for declaring the members of an abstract constructor.",
   "devDependencies": {
-    "@produck/es-abstract-token": "^0.2.2",
+    "@produck/es-abstract-token": "^0.3.0",
     "zod": "^4.6.5"
   },
   "exports": {
@@ -53,5 +53,5 @@
   },
   "type": "module",
   "types": "index.d.ts",
-  "version": "0.2.2"
+  "version": "0.2.3"
 }
