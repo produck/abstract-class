@@ -59,8 +59,7 @@ describe('layered abstraction', () => {
 
       assert.throws(() => instance.missing, {
         name: 'Error',
-        message:
-          'Instance member "missing" must be implemented in the subclass.',
+        message: 'Instance member "missing" must be implemented.',
       });
     });
   });

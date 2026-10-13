@@ -2,4 +2,5 @@ import './Extends.mjs';
 import './AbstractDefault.mjs';
 import './Erase.mjs';
 import './Trace.mjs';
+import './ShadowThis.mjs';
 import './Layered.mjs';

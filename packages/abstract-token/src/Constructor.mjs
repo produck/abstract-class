@@ -1,63 +1,14 @@
 import { Ow, ThrowTypeError } from '@produck/argot';
 import { isConstructor } from '@produck/is-constructor';
 
-import * as FieldGroup from './FieldGroup.mjs';
-import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 import * as Trace from './Trace.mjs';
+import * as FieldGroup from './FieldGroup.mjs';
+import * as Instance from './Instance.mjs';
+import * as Layer from './Layer.mjs';
+import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
-const RESERVED_PROPERTY_LIST = ['prototype', 'constructor'];
-const EXTENDS_PROXY = Symbol();
-const LAYER_TAG = Symbol.for('abstract.layer');
-const INSTANCE_PROXY = new WeakSet();
-const STATIC_VALIDATED = new WeakSet();
-
-function layerOf(owner) {
-  if (!Object.hasOwn(owner, LAYER_TAG)) {
-    return null;
-  }
-
-  return owner[LAYER_TAG];
-}
-
-function nearestLayerOf(constructor) {
-  let current = Object.getPrototypeOf(constructor);
-
-  while (typeof current === 'function') {
-    const layer = layerOf(current);
-
-    if (layer !== null) {
-      return layer;
-    }
-
-    current = Object.getPrototypeOf(current);
-  }
-
-  return null;
-}
-
-function ProxyHandler(fieldName, members) {
-  return {
-    get(target, property, receiver) {
-      const value = Reflect.get(target, property, receiver);
-
-      if (RESERVED_PROPERTY_LIST.includes(property)) {
-        return value;
-      }
-
-      if (!Object.hasOwn(members, property)) {
-        return value;
-      }
-
-      if (property in target) {
-        return members[property](value, receiver);
-      }
-
-      throw Ow.Error.Common(
-        `${fieldName} member "${String(property)}" must be implemented in the subclass.`,
-      );
-    },
-  };
-}
+const EXTENDING_PROXY = Symbol();
+const PROXY_REGISTERED = new WeakSet();
 
 function assertConstructor(value, role) {
   if (!isConstructor(value)) {
@@ -65,23 +16,10 @@ function assertConstructor(value, role) {
   }
 }
 
-function proxyOfInstance(instance, newTarget) {
-  if (INSTANCE_PROXY.has(instance)) {
-    return instance;
-  }
-
-  const { field } = nearestLayerOf(newTarget);
-  const proxy = new Proxy(instance, ProxyHandler('Instance', field.Instance));
-
-  INSTANCE_PROXY.add(proxy);
-
-  return proxy;
-}
-
 export function SubConstructorProxy(subConstructor) {
   assertConstructor(subConstructor, 'args[0]');
 
-  const proxy = subConstructor[EXTENDS_PROXY];
+  const proxy = subConstructor[EXTENDING_PROXY];
 
   if (proxy === undefined) {
     Ow.Error.Common('This constructor is NOT extended from an abstract one.');
@@ -93,7 +31,7 @@ export function SubConstructorProxy(subConstructor) {
 export function AbstractConstructor(constructor, ...fieldGroupList) {
   assertConstructor(constructor, 'args[0]');
 
-  if (Object.hasOwn(constructor, LAYER_TAG)) {
+  if (Object.hasOwn(constructor, Layer.DESCRIPTOR)) {
     Ow.Error.Common('This constructor has already been abstracted');
   }
 
@@ -104,7 +42,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
   }
 
   const ownField = NamedFieldGroup.merge(fieldGroupList);
-  const inherited = nearestLayerOf(constructor);
+  const inherited = Layer.nearestOf(constructor);
 
   const finalField = Object.freeze({
     Instance: { ...inherited?.field.Instance, ...ownField.Instance },
@@ -113,7 +51,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 
   const layer = Object.freeze({ target: constructor, field: finalField });
   const staticMemberList = Reflect.ownKeys(finalField.Static);
-  const staticProxyHandler = ProxyHandler('Static', finalField.Static);
+  const staticProxyHandler = Instance.ProxyHandler('Static', finalField.Static);
   const extendingProxySet = new WeakSet();
   const isRootLayer = inherited === null;
 
@@ -123,12 +61,12 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
         Ow.Error.Common('Illegal construction on an abstract constructor.');
       }
 
-      const isOuterMost = nearestLayerOf(newTarget) === layer;
+      const isOuterMost = Layer.nearestOf(newTarget) === layer;
 
       if (
         isOuterMost &&
         staticMemberList.length > 0 &&
-        !STATIC_VALIDATED.has(newTarget)
+        !PROXY_REGISTERED.has(newTarget)
       ) {
         Ow.Error.Common(`It MUST SubConstructorProxy("${newTarget.name}").`);
       }
@@ -144,7 +82,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
           return instance;
         }
 
-        return proxyOfInstance(instance, newTarget);
+        return Instance.proxyOf(instance, layer.field.Instance);
       } finally {
         if (isRootLayer) {
           Trace.leave();
@@ -155,7 +93,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
       const [, property, receiver] = args;
 
       // For abstract static members.
-      if (property !== EXTENDS_PROXY) {
+      if (property !== EXTENDING_PROXY) {
         return staticProxyHandler.get(...args);
       }
 
@@ -164,18 +102,18 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
       }
 
       extendingProxySet.add(receiver);
-      STATIC_VALIDATED.add(receiver);
+      PROXY_REGISTERED.add(receiver);
 
       // Creating a sub constructor.
       const wrapper = new Proxy(receiver, staticProxyHandler);
 
-      STATIC_VALIDATED.add(wrapper);
+      PROXY_REGISTERED.add(wrapper);
 
       return wrapper;
     },
   });
 
-  Object.defineProperty(constructor, LAYER_TAG, {
+  Object.defineProperty(constructor, Layer.DESCRIPTOR, {
     value: layer,
     configurable: true,
   });

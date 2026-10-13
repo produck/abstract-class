@@ -333,8 +333,7 @@ describe('::AbstractToken', () => {
 
             assert.throws(() => loose.bar, {
               name: 'Error',
-              message:
-                'Instance member "bar" must be implemented in the subclass.',
+              message: 'Instance member "bar" must be implemented.',
             });
           });
 
@@ -349,8 +348,7 @@ describe('::AbstractToken', () => {
 
             assert.throws(() => loose.getName(), {
               name: 'Error',
-              message:
-                'Instance member "name" must be implemented in the subclass.',
+              message: 'Instance member "name" must be implemented.',
             });
           });
 
@@ -395,8 +393,7 @@ describe('::AbstractToken', () => {
           it('should throw if not implemented.', () => {
             assert.throws(() => LooseSubMock.Bar, {
               name: 'Error',
-              message:
-                'Static member "Bar" must be implemented in the subclass.',
+              message: 'Static member "Bar" must be implemented.',
             });
           });
 

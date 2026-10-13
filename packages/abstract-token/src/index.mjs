@@ -24,5 +24,6 @@ Object.defineProperty(Token, 'static', { get: () => Token.Static });
 Object.freeze(Token);
 
 export { SubConstructorProxy };
+export { resolveShadowThis as ShadowThis } from './ShadowThis.mjs';
 export default Token;
 export { Any } from './Member.mjs';

@@ -153,3 +153,19 @@ export const Any: Parser;
 export function SubConstructorProxy<C extends ConstructorLike>(
   subConstructor: C,
 ): C;
+
+/**
+ * Returns the object the caller of `new` receives for the given instance.
+ *
+ * Accepts either the object seen inside a constructor body (including `this`
+ * inside the base constructor) or the object returned by `new`, and yields the
+ * same proxy for both, so instance identity stays stable along the inheritance
+ * chain.
+ *
+ * Throws when `instance` is not an object, or does not belong to a class
+ * extending an abstract constructor.
+ *
+ * @param instance - The instance, or the object received by `new`.
+ * @returns The object the caller of `new` receives.
+ */
+export function ShadowThis<T extends object>(instance: T): T;
