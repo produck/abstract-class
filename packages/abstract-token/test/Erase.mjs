@@ -1,7 +1,11 @@
 import * as assert from 'node:assert/strict';
-import { it } from 'node:test';
+import { describe, it } from 'node:test';
 
-import Abstract, { Any, SubConstructorProxy } from '../src/Erase/index.mjs';
+import Abstract, {
+  Any,
+  ShadowThis,
+  SubConstructorProxy,
+} from '../src/Erase/index.mjs';
 
 it('should ok.', () => {
   const AbstractMock = Abstract(
@@ -73,4 +77,12 @@ it('should ok.', () => {
   loose.name = 'qux';
   assert.equal(loose.getName(), 'isqux');
   SubConstructorProxy(LooseSubMock);
+});
+
+describe('ShadowThis()', () => {
+  it('should pass the object through unchanged.', () => {
+    const instance = {};
+
+    assert.equal(ShadowThis(instance), instance);
+  });
 });

@@ -25,6 +25,10 @@ npm install @produck/es-abstract-token
   accessed, even if it is not fully implemented or incorrectly implemented.
 - **Runtime Parser** — Every declared member carries a parser validating the
   value the member resolves to.
+- **Stable Instance Identity** — One construction yields exactly one proxy,
+  created at the outermost abstract layer. Code running inside a base or
+  abstract constructor body sees the raw object, so `ShadowThis` is provided to
+  resolve it to the very object the caller of `new` receives.
 - **Erasing in Production** — `@produck/es-abstract-token/erase` exposes the
   same API as a passthrough, so all runtime checks can be left out of
   production builds.
@@ -64,13 +68,13 @@ class Sample extends AbstractSample {
 // ✔ Creating a new instance is OK.
 const sample = new Sample();
 
-// ❌ Error: Instance member "bar" is NOT implemented.
+// ❌ Error: Instance member "bar" must be implemented.
 sample.bar;
 
 // ✔ Accessing `.foo` OK.
 sample.foo;
 
-// ❌ Error: Instance member "qux" is NOT implemented.
+// ❌ Error: Static member "qux" must be implemented.
 Sample.qux;
 
 // ✔ Accessing `::baz` OK.
@@ -112,6 +116,40 @@ default parser when a declared member has none.
 Creates the guarded proxy of a class extending an abstract constructor. It
 throws when `subConstructor` is not constructable, does not extend an abstract
 constructor, or already has a proxy.
+
+### `ShadowThis(instance)`
+
+Returns the object the caller of `new` receives for `instance`. Inside a base or
+abstract constructor body `this` is still the raw object, so `ShadowThis(this)`
+is the only way to reach the identity the caller holds.
+
+```js
+import Abstract, { ShadowThis as $ } from '@produck/es-abstract-token';
+
+const seen = [];
+
+const AbstractSample = Abstract(
+  class Sample {
+    constructor() {
+      seen.push($(this));
+    }
+  },
+);
+
+class Sub extends AbstractSample {}
+
+const sub = new Sub();
+
+// ✔ The constructor body resolved to the very object the caller holds.
+sub === seen[0];
+```
+
+Importing it under a short alias (as `Member` is aliased to `_`) keeps the
+resolution call apart from ordinary helpers. `$` doubles as a mnemonic: it is an
+`S` (Shadow) cut by a stroke. It is idempotent: an already resolved object is
+returned unchanged. It throws a `TypeError` when `instance` is not an object,
+and an `Error` when it does not belong to a class extending an abstract
+constructor.
 
 ### Types
 

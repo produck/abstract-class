@@ -95,16 +95,20 @@ describe('ShadowThis()', () => {
   it('should throw if the argument is not an object.', () => {
     for (const badValue of [1, 'text', null, undefined, Symbol()]) {
       assert.throws(() => ShadowThis(badValue), {
-        name: 'Error',
-        message: 'ShadowThis() requires an object.',
+        name: 'TypeError',
+        message: 'Invalid "args[0]", one "object" expected.',
       });
     }
   });
 
   it('should throw if the object is not of an abstract class.', () => {
-    assert.throws(() => ShadowThis({}), {
-      name: 'Error',
-      message: 'ShadowThis() requires an instance of an abstract class.',
-    });
+    const unrelatedList = [{}, Object.create(null), { constructor: null }];
+
+    for (const unrelated of unrelatedList) {
+      assert.throws(() => ShadowThis(unrelated), {
+        name: 'Error',
+        message: 'ShadowThis() requires an instance of an abstract class.',
+      });
+    }
   });
 });

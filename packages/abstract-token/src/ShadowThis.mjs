@@ -1,11 +1,11 @@
-import { Ow } from '@produck/argot';
+import { Ow, ThrowTypeError } from '@produck/argot';
 
 import * as Instance from './Instance.mjs';
 import * as Layer from './Layer.mjs';
 
 export function resolveShadowThis(instance) {
   if (typeof instance !== 'object' || instance === null) {
-    Ow.Error.Common('ShadowThis() requires an object.');
+    ThrowTypeError('args[0]', 'object');
   }
 
   if (Instance.isProxy(instance)) {

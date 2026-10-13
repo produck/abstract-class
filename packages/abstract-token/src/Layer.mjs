@@ -9,6 +9,10 @@ function layerOf(owner) {
 }
 
 export function nearestLayerOf(constructor) {
+  if (typeof constructor !== 'function') {
+    return null;
+  }
+
   let current = Object.getPrototypeOf(constructor);
 
   while (typeof current === 'function') {

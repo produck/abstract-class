@@ -10,5 +10,6 @@ export default Object.freeze(
 export {
   passthrough as Any,
   passthrough as Unknown,
+  passthrough as ShadowThis,
   passthrough as SubConstructorProxy,
 };
