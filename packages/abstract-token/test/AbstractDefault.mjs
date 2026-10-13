@@ -1,7 +1,7 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { Any } from '../src/index.mjs';
+import Abstract, { Any, SubConstructorProxy } from '../src/index.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
@@ -19,8 +19,6 @@ const BAD_PROPERTY_LIST = [
 const BAD_MEMBER_LIST = [true, null, BigInt(1), [], {}, new Date()];
 
 describe('::AbstractToken', () => {
-  class Mock {}
-
   describe('()', () => {
     it('should throw if operands length <1', () => {
       assert.throws(() => Abstract(), {
@@ -206,6 +204,8 @@ describe('::AbstractToken', () => {
     });
 
     it('should throw if bad field group.', () => {
+      class Mock {}
+
       for (const badValue of [1, true, null, Symbol(), 'bad']) {
         assert.throws(() => Abstract(Mock, badValue), {
           name: 'TypeError',
@@ -215,12 +215,12 @@ describe('::AbstractToken', () => {
     });
 
     it('should define an abstract class without field groups.', () => {
-      Abstract(Mock);
+      Abstract(class Mock {});
     });
 
     it('should define an abstract class with field groups.', () => {
       Abstract(
-        Mock,
+        class Mock {},
         ...[
           Abstract({
             foo: Any,
@@ -229,11 +229,22 @@ describe('::AbstractToken', () => {
       );
     });
 
+    it('should throw if the constructor has already been abstracted.', () => {
+      class Mock {}
+
+      Abstract(Mock);
+
+      assert.throws(() => Abstract(Mock), {
+        name: 'Error',
+        message: 'This constructor has already been abstracted',
+      });
+    });
+
     describe('>ConstructorProxy', () => {
       it('should throw if new abstract constructor.', () => {
         assert.throws(
           () => {
-            const AbstractMock = Abstract(Mock);
+            const AbstractMock = Abstract(class Mock {});
 
             new AbstractMock();
           },
@@ -245,6 +256,8 @@ describe('::AbstractToken', () => {
       });
 
       it('should new an instance from sub class.', () => {
+        class Mock {}
+
         const AbstractMock = Abstract(Mock);
 
         class SubMock extends AbstractMock {}
@@ -294,6 +307,8 @@ describe('::AbstractToken', () => {
 
         class LooseSubMock extends AbstractSubMock {}
 
+        const LooseSubMockProxy = SubConstructorProxy(LooseSubMock);
+
         class FullSubMock extends AbstractSubMock {
           name = 'full';
 
@@ -310,9 +325,11 @@ describe('::AbstractToken', () => {
           }
         }
 
+        const FullSubMockProxy = SubConstructorProxy(FullSubMock);
+
         describe('<Instance>', () => {
           it('should throw if not implemented.', () => {
-            const loose = new LooseSubMock();
+            const loose = new LooseSubMockProxy();
 
             assert.throws(() => loose.bar, {
               name: 'Error',
@@ -322,13 +339,13 @@ describe('::AbstractToken', () => {
           });
 
           it('should call FullSubMock.bar()', () => {
-            const full = new FullSubMock();
+            const full = new FullSubMockProxy();
 
             assert.equal(full.bar(), 'FullSubMockBar');
           });
 
           it('should throw if no `.name`.', () => {
-            const loose = new LooseSubMock();
+            const loose = new LooseSubMockProxy();
 
             assert.throws(() => loose.getName(), {
               name: 'Error',
@@ -338,7 +355,7 @@ describe('::AbstractToken', () => {
           });
 
           it('should call .getName() by instance `.name` implementing.', () => {
-            const loose = new LooseSubMock();
+            const loose = new LooseSubMockProxy();
 
             loose.name = 'qux';
             assert.equal(loose.getName(), 'isqux');
@@ -385,6 +402,26 @@ describe('::AbstractToken', () => {
 
           it('should call AbstractSubMock.Foo()', () => {
             assert.equal(AbstractSubMock.Foo(), 'AbstractSubMockStaticFoo');
+          });
+
+          it('should throw if not wrapped by SCP.', () => {
+            const AbstractRule = Abstract(
+              class Rule {},
+              ...[
+                Abstract.Static({
+                  Foo: Any,
+                }),
+              ],
+            );
+
+            class RuleSub extends AbstractRule {
+              static Foo() {}
+            }
+
+            assert.throws(() => new RuleSub(), {
+              name: 'Error',
+              message: 'It MUST SubConstructorProxy("RuleSub").',
+            });
           });
         });
       });
