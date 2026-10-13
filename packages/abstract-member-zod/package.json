@@ -36,6 +36,7 @@
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-member-zod",
   "peerDependencies": {
+    "@produck/es-abstract-token": ">=0.3.0",
     "zod": "^4.0.0"
   },
   "publishConfig": {
