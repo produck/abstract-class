@@ -1,2 +1,7 @@
-export { default, SubConstructorProxy } from '@produck/es-abstract-token';
+export {
+  default,
+  SubConstructorProxy,
+  ShadowThis,
+} from '@produck/es-abstract-token';
+
 export * as Member from '@produck/es-abstract-member';
