@@ -31,7 +31,8 @@ export default Abstract(class Sample {
 
 - default export — `Abstract`, re-exported from
   `@produck/es-abstract-token`.
-- `SubConstructorProxy` — re-exported from `@produck/es-abstract-token`.
+- `SubConstructorProxy` / `SCP` — re-exported from
+  `@produck/es-abstract-token`.
 - `ShadowThis` — re-exported from `@produck/es-abstract-token`.
 - `enableSubConstructorProxyCheck` / `disableSubConstructorProxyCheck` —
   re-exported from `@produck/es-abstract-token`.

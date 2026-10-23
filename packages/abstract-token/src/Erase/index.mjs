@@ -12,6 +12,7 @@ export {
   passthrough as Unknown,
   passthrough as ShadowThis,
   passthrough as SubConstructorProxy,
+  passthrough as SCP,
   passthrough as enableSubConstructorProxyCheck,
   passthrough as disableSubConstructorProxyCheck,
 };

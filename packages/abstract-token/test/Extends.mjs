@@ -2,12 +2,16 @@ import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import Abstract, {
+  SCP,
   SubConstructorProxy,
   enableSubConstructorProxyCheck,
   disableSubConstructorProxyCheck,
 } from '../src/index.mjs';
 
 describe('::ExtendsProxy()', () => {
+  it('should alias SCP to SubConstructorProxy.', () => {
+    assert.equal(SCP, SubConstructorProxy);
+  });
   it('should throw if not constructable.', () => {
     assert.throws(() => SubConstructorProxy(null), {
       name: 'TypeError',

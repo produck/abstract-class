@@ -1,6 +1,7 @@
 export {
   default,
   SubConstructorProxy,
+  SCP,
   ShadowThis,
   enableSubConstructorProxyCheck,
   disableSubConstructorProxyCheck,

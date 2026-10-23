@@ -111,11 +111,13 @@ members.
 A parser that passes any value through without validation. It is also the
 default parser when a declared member has none.
 
-### `SubConstructorProxy(subConstructor)`
+### `SubConstructorProxy(subConstructor)` / `SCP`
 
 Creates the guarded proxy of a class extending an abstract constructor. It
 throws when `subConstructor` is not constructable, does not extend an abstract
 constructor, or already has a proxy.
+
+`SCP` is an alias of `SubConstructorProxy`.
 
 When the construction check is enabled and the abstract layer declares static
 members, the returned proxy is the only constructible form; wrapping is what

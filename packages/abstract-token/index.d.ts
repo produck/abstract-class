@@ -154,6 +154,9 @@ export function SubConstructorProxy<C extends ConstructorLike>(
   subConstructor: C,
 ): C;
 
+/** Alias of `SubConstructorProxy`. */
+export { SubConstructorProxy as SCP };
+
 /**
  * Enables the construction-time check that a class declaring static members
  * must be wrapped by `SubConstructorProxy` before construction.

@@ -30,6 +30,7 @@ Object.freeze(Token);
 
 export {
   SubConstructorProxy,
+  SubConstructorProxy as SCP,
   enableSubConstructorProxyCheck,
   disableSubConstructorProxyCheck,
 };
