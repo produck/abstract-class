@@ -155,6 +155,21 @@ export function SubConstructorProxy<C extends ConstructorLike>(
 ): C;
 
 /**
+ * Enables the construction-time check that a class declaring static members
+ * must be wrapped by `SubConstructorProxy` before construction.
+ *
+ * The check is disabled by default.
+ */
+export function enableSubConstructorProxyCheck(): void;
+
+/**
+ * Disables the construction-time `SubConstructorProxy` check.
+ *
+ * The check is disabled by default.
+ */
+export function disableSubConstructorProxyCheck(): void;
+
+/**
  * Returns the object the caller of `new` receives for the given instance.
  *
  * Accepts either the object seen inside a constructor body (including `this`

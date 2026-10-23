@@ -31,10 +31,10 @@ it('should declare constructor members of an abstract class.', () => {
   const JsonProxy = SubConstructorProxy(JsonSource);
   const BadProxy = SubConstructorProxy(BadSource);
 
-  assert.ok(typeof new JsonSource().Parser === 'function');
+  assert.ok(typeof new JsonProxy().Parser === 'function');
   assert.ok(typeof JsonProxy.Loader === 'function');
 
-  assert.throws(() => new BadSource().Parser, {
+  assert.throws(() => new BadProxy().Parser, {
     name: 'TypeError',
     message: 'Invalid "member", one "constructible" expected.',
   });

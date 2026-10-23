@@ -1,7 +1,11 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { SubConstructorProxy } from '../src/index.mjs';
+import Abstract, {
+  SubConstructorProxy,
+  enableSubConstructorProxyCheck,
+  disableSubConstructorProxyCheck,
+} from '../src/index.mjs';
 
 describe('::ExtendsProxy()', () => {
   it('should throw if not constructable.', () => {
@@ -29,6 +33,36 @@ describe('::ExtendsProxy()', () => {
       name: 'Error',
       message: 'Extending proxy has already been created',
     });
+  });
+
+  it('should not check SCP by default.', () => {
+    const AbstractMock = Abstract(class Mock {}, ...[Abstract.Static('foo')]);
+
+    class SubMock extends AbstractMock {
+      static foo = 1;
+    }
+
+    assert.doesNotThrow(() => new SubMock());
+  });
+
+  it('should throw if constructing the original class when check enabled.', () => {
+    const AbstractMock = Abstract(class Mock {}, ...[Abstract.Static('foo')]);
+
+    class SubMock extends AbstractMock {
+      static foo = 1;
+    }
+
+    SubConstructorProxy(SubMock);
+    enableSubConstructorProxyCheck();
+
+    try {
+      assert.throws(() => new SubMock(), {
+        name: 'Error',
+        message: 'It MUST SubConstructorProxy("SubMock").',
+      });
+    } finally {
+      disableSubConstructorProxyCheck();
+    }
   });
 
   it('should access target when parse.', () => {

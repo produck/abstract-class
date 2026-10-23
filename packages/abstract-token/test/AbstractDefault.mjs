@@ -1,7 +1,12 @@
 import * as assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import Abstract, { Any, SubConstructorProxy } from '../src/index.mjs';
+import Abstract, {
+  Any,
+  SubConstructorProxy,
+  enableSubConstructorProxyCheck,
+  disableSubConstructorProxyCheck,
+} from '../src/index.mjs';
 
 const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
 
@@ -415,10 +420,16 @@ describe('::AbstractToken', () => {
               static Foo() {}
             }
 
-            assert.throws(() => new RuleSub(), {
-              name: 'Error',
-              message: 'It MUST SubConstructorProxy("RuleSub").',
-            });
+            enableSubConstructorProxyCheck();
+
+            try {
+              assert.throws(() => new RuleSub(), {
+                name: 'Error',
+                message: 'It MUST SubConstructorProxy("RuleSub").',
+              });
+            } finally {
+              disableSubConstructorProxyCheck();
+            }
           });
         });
       });

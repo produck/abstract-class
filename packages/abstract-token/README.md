@@ -117,6 +117,31 @@ Creates the guarded proxy of a class extending an abstract constructor. It
 throws when `subConstructor` is not constructable, does not extend an abstract
 constructor, or already has a proxy.
 
+When the construction check is enabled and the abstract layer declares static
+members, the returned proxy is the only constructible form; wrapping is what
+puts the class under that check.
+
+### `enableSubConstructorProxyCheck()` / `disableSubConstructorProxyCheck()`
+
+Turn the construction-time check on or off. It is **off** by default, so a
+subclass may declare static members without wrapping. Enable it in tests to
+catch classes that never went through `SubConstructorProxy`.
+
+```js
+import {
+  enableSubConstructorProxyCheck,
+  disableSubConstructorProxyCheck,
+} from '@produck/es-abstract-token';
+
+enableSubConstructorProxyCheck();
+
+try {
+  // constructing an unwrapped subclass now throws
+} finally {
+  disableSubConstructorProxyCheck();
+}
+```
+
 ### `ShadowThis(instance)`
 
 Returns the object the caller of `new` receives for `instance`. Inside a base or

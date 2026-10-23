@@ -1,4 +1,4 @@
-import Abstract, { Member as _ } from '@produck/es-abstract';
+import Abstract, { Member as M } from '@produck/es-abstract';
 import { Zod } from '@produck/es-abstract-member-zod';
 import * as zod from 'zod';
 
@@ -20,12 +20,12 @@ const AbstractSimpleMock = Abstract(
   },
   ...[
     Abstract({
-      foo: _.String,
-      bar: _.Instance(Date),
-      baz: _.Method().args(_.Number).returns(_.Boolean),
-      list: _.Method().returns(numberList),
+      foo: M.String,
+      bar: M.Instance(Date),
+      baz: M.Method().args(M.Number).returns(M.Boolean),
+      list: M.Method().returns(numberList),
     }),
-    Abstract.Static('qux', _.Boolean),
+    Abstract.Static('qux', M.Boolean),
   ],
 );
 

@@ -1,6 +1,11 @@
 import { Ow } from '@produck/argot';
 
-import { AbstractConstructor, SubConstructorProxy } from './Constructor.mjs';
+import {
+  AbstractConstructor,
+  SubConstructorProxy,
+  enableSubConstructorProxyCheck,
+  disableSubConstructorProxyCheck,
+} from './Constructor.mjs';
 import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
 const Token = Object.assign(
@@ -23,7 +28,11 @@ const Token = Object.assign(
 Object.defineProperty(Token, 'static', { get: () => Token.Static });
 Object.freeze(Token);
 
-export { SubConstructorProxy };
+export {
+  SubConstructorProxy,
+  enableSubConstructorProxyCheck,
+  disableSubConstructorProxyCheck,
+};
 export { resolveShadowThis as ShadowThis } from './ShadowThis.mjs';
 export default Token;
 export { Any } from './Member.mjs';

@@ -9,11 +9,20 @@ import * as NamedFieldGroup from './NamedFieldGroup.mjs';
 
 const EXTENDING_PROXY = Symbol();
 const PROXY_REGISTERED = new WeakSet();
+let subConstructorProxyCheckEnabled = false;
 
 function assertConstructor(value, role) {
   if (!isConstructor(value)) {
     ThrowTypeError(role, 'constructible');
   }
+}
+
+export function enableSubConstructorProxyCheck() {
+  subConstructorProxyCheckEnabled = true;
+}
+
+export function disableSubConstructorProxyCheck() {
+  subConstructorProxyCheckEnabled = false;
 }
 
 export function SubConstructorProxy(subConstructor) {
@@ -65,6 +74,7 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
 
       if (
         isOuterMost &&
+        subConstructorProxyCheckEnabled &&
         staticMemberList.length > 0 &&
         !PROXY_REGISTERED.has(newTarget)
       ) {
@@ -102,7 +112,6 @@ export function AbstractConstructor(constructor, ...fieldGroupList) {
       }
 
       extendingProxySet.add(receiver);
-      PROXY_REGISTERED.add(receiver);
 
       // Creating a sub constructor.
       const wrapper = new Proxy(receiver, staticProxyHandler);
