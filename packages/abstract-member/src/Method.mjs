@@ -1,9 +1,9 @@
-import { Ow, ThrowTypeError } from '@produck/argot';
+import { Is, Ow, ThrowTypeError } from '@produck/argot';
 
 const operators = {
   args: (...parsers) => {
     for (const [index, parser] of parsers.entries()) {
-      if (typeof parser !== 'function') {
+      if (!Is.Type.Function(parser)) {
         ThrowTypeError(`args[${index}]`, 'function');
       }
     }
@@ -11,14 +11,14 @@ const operators = {
     return parsers;
   },
   rest: (parser) => {
-    if (typeof parser !== 'function') {
+    if (!Is.Type.Function(parser)) {
       ThrowTypeError('args[0]', 'function');
     }
 
     return parser;
   },
   returns: (parser) => {
-    if (typeof parser !== 'function') {
+    if (!Is.Type.Function(parser)) {
       ThrowTypeError('args[0]', 'function');
     }
 
@@ -45,7 +45,7 @@ export const defineMethodMember = () => {
 
   return new Proxy(
     function parseMember(functionMember, target) {
-      if (typeof functionMember !== 'function') {
+      if (!Is.Type.Function(functionMember)) {
         ThrowTypeError('member', 'function');
       }
 

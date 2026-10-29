@@ -1,7 +1,7 @@
 import * as FieldGroup from './FieldGroup.mjs';
 
-const Instance = Symbol.for('field.instance');
-const Static = Symbol.for('field.static');
+const Instance = Symbol('field.instance');
+const Static = Symbol('field.static');
 
 export function mergeFieldGroup(list) {
   const final = { Instance: {}, Static: {} };

@@ -7,8 +7,7 @@ import Abstract, {
   enableSubConstructorProxyCheck,
   disableSubConstructorProxyCheck,
 } from '../src/index.mjs';
-
-const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
+import { isFieldGroup } from '../src/FieldGroup.mjs';
 
 const BAD_PROPERTY_LIST = [
   true,
@@ -76,7 +75,7 @@ describe('::AbstractToken', () => {
       it('should return a FieldGroup.', () => {
         const group = Abstract({ foo: Any });
 
-        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+        assert.ok(isFieldGroup(group));
       });
     });
 
@@ -107,7 +106,7 @@ describe('::AbstractToken', () => {
       it('should return a FieldGroup.', () => {
         const group = Abstract('foo', Any);
 
-        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+        assert.ok(isFieldGroup(group));
       });
     });
   });
@@ -162,7 +161,7 @@ describe('::AbstractToken', () => {
       it('should return a FieldGroup.', () => {
         const group = Abstract.Static({ foo: Any });
 
-        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+        assert.ok(isFieldGroup(group));
       });
     });
 
@@ -189,7 +188,7 @@ describe('::AbstractToken', () => {
       it('should return a FieldGroup.', () => {
         const group = Abstract.Static('foo', Any);
 
-        assert.ok(Object.hasOwn(group, FIELD_GROUP_TAG));
+        assert.ok(isFieldGroup(group));
       });
     });
   });

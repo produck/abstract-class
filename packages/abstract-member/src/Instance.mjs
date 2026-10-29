@@ -1,5 +1,5 @@
 import { isConstructor } from '@produck/is-constructor';
-import { ThrowTypeError } from '@produck/argot';
+import { ThrowTypeError, instanceOf } from '@produck/argot';
 
 export function Instance(constructor) {
   if (!isConstructor(constructor)) {
@@ -7,7 +7,7 @@ export function Instance(constructor) {
   }
 
   return function parseObject(value) {
-    if (value instanceof constructor) {
+    if (instanceOf(value, constructor)) {
       return value;
     }
 

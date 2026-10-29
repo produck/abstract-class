@@ -1,4 +1,6 @@
-export const LAYER_DESCRIPTOR = Symbol.for('abstract.layer');
+import { Is } from '@produck/argot';
+
+export const LAYER_DESCRIPTOR = Symbol('abstract.layer');
 
 function layerOf(owner) {
   if (!Object.hasOwn(owner, LAYER_DESCRIPTOR)) {
@@ -9,13 +11,13 @@ function layerOf(owner) {
 }
 
 export function nearestLayerOf(constructor) {
-  if (typeof constructor !== 'function') {
+  if (!Is.Type.Function(constructor)) {
     return null;
   }
 
   let current = Object.getPrototypeOf(constructor);
 
-  while (typeof current === 'function') {
+  while (Is.Type.Function(current)) {
     const layer = layerOf(current);
 
     if (layer !== null) {

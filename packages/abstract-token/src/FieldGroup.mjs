@@ -1,11 +1,11 @@
-import { Ow, ThrowTypeError } from '@produck/argot';
+import { Is, Ow, ThrowTypeError } from '@produck/argot';
 
 import * as Member from './Member.mjs';
 
-const FIELD_GROUP_TAG = Symbol.for('abstract.member.field.group');
+const FIELD_GROUP_TAG = Symbol('abstract.member.field.group');
 
 export function isFieldGroup(value) {
-  if (typeof value !== 'object' || value === null) {
+  if (!Is.PlainObject(value)) {
     return false;
   }
 
@@ -16,7 +16,7 @@ const PROPERTY_EXPECTED = Member.PROPERTY_TYPE_LIST.join(' | ');
 
 export function FieldGroupProvider(symbol) {
   function assertMember(member, role) {
-    if (typeof member !== 'function') {
+    if (!Is.Type.Function(member)) {
       ThrowTypeError(role, 'function');
     }
   }
@@ -63,7 +63,7 @@ export function FieldGroupProvider(symbol) {
 
     return Object.freeze({
       [FIELD_GROUP_TAG]: true,
-      ...(typeof first === 'object' && first !== null && operands.length === 1
+      ...(Is.PlainObject(first) && operands.length === 1
         ? By.MemberRecord(...operands)
         : By.NamedMember(...operands)),
     });

@@ -1,4 +1,4 @@
-import { Ow } from '@produck/argot';
+import { Is, Ow } from '@produck/argot';
 
 import {
   AbstractConstructor,
@@ -16,7 +16,7 @@ const Token = Object.assign(
       Ow.Error.Syntax('At least 1 operand is required.');
     }
 
-    if (typeof operands[0] === 'function') {
+    if (Is.Type.Function(operands[0])) {
       return AbstractConstructor(...operands);
     }
 
