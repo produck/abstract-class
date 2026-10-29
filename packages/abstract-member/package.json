@@ -6,7 +6,7 @@
   "description": "Ready-made parsers for declaring the members of an abstract constructor.",
   "devDependencies": {
     "@produck/argot": "^0.4.0",
-    "@produck/es-abstract-token": "^0.4.0",
+    "@produck/es-abstract-token": "^0.4.1",
     "@produck/is-constructor": "^2.0.0"
   },
   "exports": {
@@ -52,5 +52,5 @@
   "sideEffects": false,
   "type": "module",
   "types": "src/index.d.mts",
-  "version": "0.4.0"
+  "version": "0.4.1"
 }

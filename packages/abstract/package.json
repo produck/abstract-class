@@ -5,8 +5,8 @@
   },
   "description": "Convenience entry re-exporting the abstract-class toolkit.",
   "devDependencies": {
-    "@produck/es-abstract-member": "^0.4.0",
-    "@produck/es-abstract-token": "^0.4.0"
+    "@produck/es-abstract-member": "^0.4.1",
+    "@produck/es-abstract-token": "^0.4.1"
   },
   "exports": {
     ".": {
@@ -48,5 +48,5 @@
   "sideEffects": false,
   "type": "module",
   "types": "src/index.d.mts",
-  "version": "0.4.2"
+  "version": "0.5.0"
 }
