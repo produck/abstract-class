@@ -1,14 +1,14 @@
-import { ThrowTypeError } from '@produck/type-error';
+import { Is, ThrowTypeError } from '@produck/argot';
 
-const TYPE_NAME_LIST = [
-  'undefined',
-  'object',
-  'boolean',
-  'number',
-  'bigint',
-  'string',
-  'symbol',
-  'function',
+const TYPE_LIST = [
+  ['undefined', Is.Type.Undefined],
+  ['object', Is.Type.Object],
+  ['boolean', Is.Type.Boolean],
+  ['number', Is.Type.Number],
+  ['bigint', Is.Type.Bigint],
+  ['string', Is.Type.String],
+  ['symbol', Is.Type.Symbol],
+  ['function', Is.Type.Function],
 ];
 
 export const [
@@ -20,9 +20,9 @@ export const [
   String,
   Symbol,
   Function,
-] = TYPE_NAME_LIST.map(function PrimitiveTypeMember(typeName) {
+] = TYPE_LIST.map(function PrimitiveTypeMember([typeName, isType]) {
   return function parsePrimitive(value) {
-    if (typeof value !== typeName) {
+    if (!isType(value)) {
       ThrowTypeError('member', typeName);
     }
 

@@ -3,20 +3,19 @@
   "bugs": {
     "url": "https://github.com/produck/abstract-class/issues"
   },
-  "dependencies": {
+  "description": "Convenience entry re-exporting the abstract-class toolkit.",
+  "devDependencies": {
     "@produck/es-abstract-member": "^0.3.3",
     "@produck/es-abstract-token": "^0.4.0"
   },
-  "description": "Convenience entry re-exporting the abstract-class toolkit.",
   "exports": {
     ".": {
       "import": "./src/index.mjs",
-      "types": "./index.d.ts"
+      "types": "./src/index.d.mts"
     }
   },
   "files": [
-    "src",
-    "index.d.ts"
+    "src"
   ],
   "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract#readme",
   "keywords": [
@@ -30,6 +29,10 @@
   "license": "MIT",
   "main": "src/index.mjs",
   "name": "@produck/es-abstract",
+  "peerDependencies": {
+    "@produck/es-abstract-member": "^0.3.3",
+    "@produck/es-abstract-token": "^0.4.0"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -42,7 +45,8 @@
     "produck:coverage": "c8 --reporter=lcov --reporter=html --reporter=text-summary npm test",
     "test": "node -e \"console.log('No tests configured')\""
   },
+  "sideEffects": false,
   "type": "module",
-  "types": "index.d.ts",
+  "types": "src/index.d.mts",
   "version": "0.4.2"
 }

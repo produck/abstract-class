@@ -1,5 +1,5 @@
 import { isConstructor } from '@produck/is-constructor';
-import { ThrowTypeError } from '@produck/type-error';
+import { ThrowTypeError } from '@produck/argot';
 
 export function Instance(constructor) {
   if (!isConstructor(constructor)) {

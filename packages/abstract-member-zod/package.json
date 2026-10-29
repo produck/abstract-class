@@ -3,23 +3,20 @@
   "bugs": {
     "url": "https://github.com/produck/abstract-class/issues"
   },
-  "dependencies": {
-    "@produck/type-error": "^0.1.8"
-  },
   "description": "Zod-schema parsers for declaring the members of an abstract constructor.",
   "devDependencies": {
     "@produck/es-abstract-token": "^0.4.0",
-    "zod": "^4.6.5"
+    "@produck/type-error": "^0.2.0",
+    "zod": "^4.0.0"
   },
   "exports": {
     ".": {
       "import": "./src/index.mjs",
-      "types": "./index.d.ts"
+      "types": "./src/index.d.mts"
     }
   },
   "files": [
-    "src",
-    "index.d.ts"
+    "src"
   ],
   "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract-member-zod#readme",
   "keywords": [
@@ -36,7 +33,8 @@
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-member-zod",
   "peerDependencies": {
-    "@produck/es-abstract-token": ">=0.3.0",
+    "@produck/es-abstract-token": "^0.4.0",
+    "@produck/type-error": "^0.2.0",
     "zod": "^4.0.0"
   },
   "publishConfig": {
@@ -52,7 +50,8 @@
     "test": "node ./test/index.mjs",
     "test:only": "node --test-only ./test/index.mjs"
   },
+  "sideEffects": false,
   "type": "module",
-  "types": "index.d.ts",
+  "types": "src/index.d.mts",
   "version": "0.2.4"
 }

@@ -1,12 +1,8 @@
 import { Any } from '@produck/es-abstract-token';
-import { ThrowTypeError } from '@produck/type-error';
-
-function isPromiseLike(value) {
-  return typeof value?.then === 'function';
-}
+import { Is, ThrowTypeError } from '@produck/argot';
 
 function assertParser(parser) {
-  if (typeof parser !== 'function') {
+  if (!Is.Type.Function(parser)) {
     ThrowTypeError('args[0]', 'function');
   }
 }
@@ -15,7 +11,7 @@ function PromiseParser(parser = Any) {
   assertParser(parser);
 
   return function parsePromise(value) {
-    if (!(value instanceof Promise)) {
+    if (!Is.Instance.Promise(value)) {
       ThrowTypeError('member', 'Promise');
     }
 
@@ -27,7 +23,7 @@ export function OrPromise(parser = Any) {
   assertParser(parser);
 
   return function parseOrPromise(value) {
-    if (value instanceof Promise) {
+    if (Is.Instance.Promise(value)) {
       return value.then(parser);
     }
 
@@ -39,7 +35,7 @@ export function PromiseLike(parser = Any) {
   assertParser(parser);
 
   return function parsePromiseLike(value) {
-    if (!isPromiseLike(value)) {
+    if (!Is.Thenable(value)) {
       ThrowTypeError('member', 'PromiseLike');
     }
 
@@ -51,7 +47,7 @@ export function OrPromiseLike(parser = Any) {
   assertParser(parser);
 
   return function parseOrPromiseLike(value) {
-    if (isPromiseLike(value)) {
+    if (Is.Thenable(value)) {
       return value.then(parser);
     }
 

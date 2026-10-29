@@ -1,5 +1,4 @@
-import * as Ow from '@produck/ow';
-import { ThrowTypeError } from '@produck/type-error';
+import { Ow, ThrowTypeError } from '@produck/argot';
 
 const operators = {
   args: (...parsers) => {

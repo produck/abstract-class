@@ -42,6 +42,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# npm lockfile (disabled via .npmrc package-lock=false)
+package-lock.json
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 

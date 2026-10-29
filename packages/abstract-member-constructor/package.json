@@ -3,21 +3,21 @@
   "bugs": {
     "url": "https://github.com/produck/abstract-class/issues"
   },
-  "dependencies": {
-    "@produck/argot": "^0.3.1",
-    "@produck/is-constructor": "^1.0.3",
-    "@produck/is-sub-constructor": "^1.0.4"
-  },
   "description": "Constructor parsers for declaring the members of an abstract constructor.",
+  "devDependencies": {
+    "@produck/argot": "^0.4.0",
+    "@produck/es-abstract-token": "^0.4.0",
+    "@produck/is-constructor": "^2.0.0",
+    "@produck/is-sub-constructor": "^2.0.0"
+  },
   "exports": {
     ".": {
       "import": "./src/index.mjs",
-      "types": "./index.d.ts"
+      "types": "./src/index.d.mts"
     }
   },
   "files": [
-    "src",
-    "index.d.ts"
+    "src"
   ],
   "homepage": "https://github.com/produck/abstract-class/tree/main/packages/abstract-member-constructor#readme",
   "keywords": [
@@ -33,7 +33,10 @@
   "main": "src/index.mjs",
   "name": "@produck/es-abstract-member-constructor",
   "peerDependencies": {
-    "@produck/es-abstract-token": ">=0.3.0"
+    "@produck/argot": "^0.4.0",
+    "@produck/es-abstract-token": "^0.4.0",
+    "@produck/is-constructor": "^2.0.0",
+    "@produck/is-sub-constructor": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -48,7 +51,8 @@
     "test": "node ./test/index.mjs",
     "test:only": "node --test-only ./test/index.mjs"
   },
+  "sideEffects": false,
   "type": "module",
-  "types": "index.d.ts",
+  "types": "src/index.d.mts",
   "version": "0.1.2"
 }
