@@ -5,7 +5,7 @@
   },
   "description": "Convenience entry re-exporting the abstract-class toolkit.",
   "devDependencies": {
-    "@produck/es-abstract-member": "^0.3.3",
+    "@produck/es-abstract-member": "^0.4.0",
     "@produck/es-abstract-token": "^0.4.0"
   },
   "exports": {
@@ -30,7 +30,7 @@
   "main": "src/index.mjs",
   "name": "@produck/es-abstract",
   "peerDependencies": {
-    "@produck/es-abstract-member": "^0.3.3",
+    "@produck/es-abstract-member": "^0.4.0",
     "@produck/es-abstract-token": "^0.4.0"
   },
   "publishConfig": {
