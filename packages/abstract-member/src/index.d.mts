@@ -150,3 +150,56 @@ export function PromiseLike<P extends Parser = typeof Any>(
 export function OrPromiseLike<P extends Parser = typeof Any>(
   parser?: P,
 ): Parser<ReturnType<P> | globalThis.PromiseLike<ReturnType<P>>>;
+
+/**
+ * Asserts value is a synchronous iterable and applies the parser to every
+ * item, collecting the results into an array.
+ *
+ * @param parser - The parser applied to each item.
+ * @returns A parser that validates an iterable member.
+ */
+export function Iterable(parser?: Parser): Parser<unknown[]>;
+
+/**
+ * Accepts a synchronous iterable or a plain value; applies the parser
+ * accordingly.
+ *
+ * @param parser - The parser applied to the value or to every item.
+ * @returns A parser that accepts either an iterable or a direct value.
+ */
+export function OrIterable(parser?: Parser): Parser<unknown[] | unknown>;
+
+/**
+ * Asserts value is an async iterable and applies the parser to every item,
+ * collecting the results into an array.
+ *
+ * @param parser - The parser applied to each item.
+ * @returns A promise of the array of validated items.
+ */
+export function AsyncIterable(parser?: Parser): Parser<Promise<unknown[]>>;
+
+/**
+ * Accepts an async iterable or a plain value; applies the parser
+ * accordingly.
+ *
+ * @param parser - The parser applied to the value or to every item.
+ * @returns A promise of the array of validated items, or of the value.
+ */
+export function OrAsyncIterable(
+  parser?: Parser,
+): Parser<Promise<unknown[] | unknown>>;
+
+/** Asserts value is an iterator: an object exposing a callable `next`. */
+export const Iterator: Parser<object>;
+
+/**
+ * Asserts value is a well-formed iterator: it exposes `next` and its
+ * `Symbol.iterator` returns itself.
+ */
+export const WellFormedIterator: Parser<object>;
+
+/** Asserts value is a generator function (`function*`). */
+export const Generator: Parser<(...args: unknown[]) => unknown>;
+
+/** Asserts value is an async generator function (`async function*`). */
+export const AsyncGenerator: Parser<(...args: unknown[]) => unknown>;

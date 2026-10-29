@@ -1,8 +1,8 @@
-import { isConstructor } from '@produck/is-constructor';
+import { isClassLike } from '@produck/is-constructor';
 import { ThrowTypeError, instanceOf } from '@produck/argot';
 
 export function Instance(constructor) {
-  if (!isConstructor(constructor)) {
+  if (!isClassLike(constructor)) {
     ThrowTypeError('args[0]', 'constructible');
   }
 

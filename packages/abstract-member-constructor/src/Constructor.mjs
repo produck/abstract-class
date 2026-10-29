@@ -1,8 +1,8 @@
 import { ThrowTypeError } from '@produck/argot';
-import { isConstructor } from '@produck/is-constructor';
+import { isClassLike } from '@produck/is-constructor';
 
 export function Constructor(value) {
-  if (isConstructor(value)) {
+  if (isClassLike(value)) {
     return value;
   }
 

@@ -12,3 +12,4 @@ import './Primitive.spec.mjs';
 import './Instance.spec.mjs';
 import './Method.spec.mjs';
 import './Promise.spec.mjs';
+import './Iterable.spec.mjs';

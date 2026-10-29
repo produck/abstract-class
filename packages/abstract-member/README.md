@@ -98,6 +98,33 @@ _.Method().args(_.Number).returns(_.Boolean);
 The same as `Promise` / `OrPromise`, but accepting any thenable instead of a
 `Promise` instance.
 
+### `Iterable` / `AsyncIterable`
+
+- `Iterable` — asserts the value is a synchronous iterable
+  (`Symbol.iterator`) and returns it unchanged.
+- `AsyncIterable` — asserts the value is an async iterable
+  (`Symbol.asyncIterator`) and returns it unchanged.
+
+Strings are iterable, so `_.Iterable('ab')` passes; a bare `next` object does
+not.
+
+### `Iterator` / `WellFormedIterator`
+
+- `Iterator` — asserts the value exposes a callable `next`, and returns it
+  unchanged.
+- `WellFormedIterator` — additionally requires `Symbol.iterator` to return the
+  iterator itself, which is what `for...of` demands.
+
+An async generator is an `Iterator` but not a `WellFormedIterator`.
+
+### `Generator` / `AsyncGenerator`
+
+- `Generator` — asserts the value is a generator function (`function*`).
+- `AsyncGenerator` — asserts the value is an async generator function
+  (`async function*`).
+
+Both check the function itself, not the iterator it produces.
+
 ### `Any` / `Unknown`
 
 A parser that passes any value through without validation. It is also the

@@ -1,5 +1,5 @@
 import { Ow, ThrowTypeError } from '@produck/argot';
-import { isConstructor } from '@produck/is-constructor';
+import { isClassLike } from '@produck/is-constructor';
 
 import * as Trace from './Trace.mjs';
 import * as FieldGroup from './FieldGroup.mjs';
@@ -12,7 +12,7 @@ const PROXY_REGISTERED = new WeakSet();
 let subConstructorProxyCheckEnabled = false;
 
 function assertConstructor(value, role) {
-  if (!isConstructor(value)) {
+  if (!isClassLike(value)) {
     ThrowTypeError(role, 'constructible');
   }
 }

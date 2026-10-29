@@ -1,9 +1,9 @@
 import { ThrowTypeError } from '@produck/argot';
-import { isConstructor } from '@produck/is-constructor';
+import { isClassLike } from '@produck/is-constructor';
 import { isSubConstructor } from '@produck/is-sub-constructor';
 
 export function SubConstructorOf(Base) {
-  if (!isConstructor(Base)) {
+  if (!isClassLike(Base)) {
     ThrowTypeError('args[0]', 'constructible');
   }
 
